@@ -15,9 +15,9 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>"/>
 <link rel="manifest" href="manifest.webmanifest"/>
 
-<!-- API config через meta — позволяет инжектить через CI/sed без правки исходников. -->
-<meta name="yasna:api"    content="https://d5dmdje8c5mk8811il5j.iwzqm34r.apigw.yandexcloud.net"/>
-<meta name="yasna:tg-bot" content="YasnaDuelBot"/>
+<!-- yasnaproject quarantine: keep shared production backend disabled until isolated endpoints exist. -->
+<meta name="yasna:api"    content=""/>
+<meta name="yasna:tg-bot" content=""/>
 
 <link rel="stylesheet" href="styles.css"/>
 <link rel="stylesheet" href="games/duel/duel-page.css"/>
@@ -25,20 +25,17 @@
 <body>
 <div id="duel-page-root"></div>
 
-<!-- React + Three.js + Firebase из CDN -->
+<!-- React + Three.js из CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<!-- Firebase compat-сборки: глобальный объект `firebase`, классические script-теги -->
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
 
 <script>
   (function(){
     var m = function(n){ var el = document.querySelector('meta[name="yasna:'+n+'"]'); return el ? el.getAttribute('content') : ''; };
     window.YASNA_LEADERBOARD_API = m('api') || '';
     window.YASNA_TG_BOT = m('tg-bot') || '';
+    window.YASNA_DISABLE_SHARED_REALTIME = true;
   })();
 </script>
 

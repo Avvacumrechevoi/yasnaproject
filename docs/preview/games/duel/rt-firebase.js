@@ -43,6 +43,9 @@
   let authPromise = null;
 
   function init(){
+    if(typeof window !== 'undefined' && window.YASNA_DISABLE_SHARED_REALTIME === true){
+      throw new Error('Realtime PvP disabled in yasnaproject quarantine mode.');
+    }
     if(app) return;
     if(typeof firebase === 'undefined'){
       throw new Error('Firebase SDK не загружен. Проверь script-теги в duel.html.');

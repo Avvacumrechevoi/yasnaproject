@@ -40,8 +40,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
-  window.YASNA_LEADERBOARD_API = "https://d5dmdje8c5mk8811il5j.iwzqm34r.apigw.yandexcloud.net";
-  window.YASNA_TG_BOT = "YasnaDuelBot";
+  // yasnaproject quarantine: no shared production backend writes from v2 preview.
+  window.YASNA_LEADERBOARD_API = "";
+  window.YASNA_TG_BOT = "";
+  window.YASNA_DISABLE_SHARED_REALTIME = true;
 </script>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
