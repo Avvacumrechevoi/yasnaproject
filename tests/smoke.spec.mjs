@@ -113,9 +113,9 @@ test.describe('Главное приложение', () => {
     await expect(lessonsBtn).toBeVisible({ timeout: 5000 });
     await lessonsBtn.click();
     // Должен появиться LessonPicker — заголовок "Курс по Ясне"
-    await expect(page.getByText(/Курс по Ясне|Метод Ясны/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('heading', { name: 'Курс по Ясне' })).toBeVisible({ timeout: 5000 });
     // Должен быть как минимум 1 ready-урок (l1_intro точно)
-    await expect(page.getByText(/Что такое Ясна/)).toBeVisible();
+    await expect(page.getByText(/Что такое Ясна/).first()).toBeVisible();
   });
 
 });
@@ -166,7 +166,9 @@ test.describe('Дуэль', () => {
     await dialog.getByRole('button', { name: /Начать партию/ }).click({ timeout: 5000 });
 
     // VsScreen → пауза 1.4с → RoundIntro → пауза 1.3с → первый вопрос
-    await page.waitForSelector('.tn-question-text', { timeout: 10_000 });
+    const question = page.locator('.tn-q-text').first();
+    await expect(question).toBeVisible({ timeout: 10_000 });
+    const questionBefore = await question.innerText();
 
     // Кликаем первый вариант
     const opt1 = page.locator('.tn-option').first();
@@ -177,10 +179,13 @@ test.describe('Дуэль', () => {
 
     // Должен либо отрисоваться следующий вопрос (другой текст),
     // либо начаться следующий раунд (.tn-round-title)
-    const nextScreen = await Promise.race([
-      page.waitForSelector('.tn-question-text:not(:has-text("Ясна — это…"))', { timeout: 5000 }).then(() => 'q2').catch(() => null),
-      page.waitForSelector('.tn-round-title', { timeout: 5000 }).then(() => 'intro').catch(() => null),
-    ]);
+    const nextScreen = await page.waitForFunction((prev) => {
+      const nextQuestion = document.querySelector('.tn-q-text')?.textContent?.trim();
+      if(nextQuestion && nextQuestion !== prev) return 'q2';
+      if(document.querySelector('.tn-round-title')) return 'intro';
+      if(document.querySelector('.tn-final')) return 'final';
+      return null;
+    }, questionBefore.trim(), { timeout: 5000 }).then(h => h.jsonValue()).catch(() => null);
     expect(nextScreen, 'Партия зависла после первого ответа').not.toBeNull();
   });
 
