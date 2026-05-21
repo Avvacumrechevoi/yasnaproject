@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  title: Yasna Duel API
+  title: yasnaproject API
   version: 1.0.0
 servers:
-  - url: https://d5d{YOUR_GW_ID}.apigw.yandexcloud.net
+  - url: "https://<YASNAPROJECT_API_GATEWAY_HOST>"
 paths:
   /auth/telegram:
     post:

@@ -25,10 +25,40 @@ const activeHtmlFiles = [
   'docs/preview/games/duel/v2/duel.html',
 ];
 
+const runtimeJsFiles = [
+  'docs/games/duel/duel.js',
+  'docs/preview/games/duel/duel.js',
+  'docs/games/duel/duel-page.js',
+  'docs/preview/games/duel/duel-page.js',
+  'docs/admin.js',
+  'docs/preview/admin.js',
+];
+
+const serverDeploymentFiles = [
+  'server/README.md',
+  'server/api-gateway.yaml',
+];
+
 const forbiddenActiveHtml = [
   { label: 'old Yandex API gateway host', pattern: /d5dmdje8c5mk8811il5j/i },
   { label: 'old Telegram bot username', pattern: /YasnaDuelBot/i },
+  { label: 'old GitHub Pages URL', pattern: /avvacumrechevoi\.github\.io\/yasnanegotiations/i },
+  { label: 'old GitHub repository URL', pattern: /github\.com\/Avvacumrechevoi\/yasnanegotiations/i },
   { label: 'Firebase SDK loader', pattern: /www\.gstatic\.com\/firebasejs/i },
+];
+
+const forbiddenRuntime = [
+  { label: 'old Yandex API gateway host', pattern: /d5dmdje8c5mk8811il5j/i },
+  { label: 'old Telegram bot username', pattern: /YasnaDuelBot/i },
+  { label: 'old GitHub Pages URL', pattern: /avvacumrechevoi\.github\.io\/yasnanegotiations/i },
+  { label: 'old GitHub repository URL', pattern: /github\.com\/Avvacumrechevoi\/yasnanegotiations/i },
+];
+
+const forbiddenServerDeployment = [
+  ...forbiddenRuntime,
+  { label: 'legacy server_schema filename', pattern: /server_schema/i },
+  { label: 'legacy server_function filename', pattern: /server_function/i },
+  { label: 'legacy server_api_gateway filename', pattern: /server_api_gateway/i },
 ];
 
 for (const file of activeHtmlFiles) {
@@ -37,6 +67,43 @@ for (const file of activeHtmlFiles) {
     if (rule.pattern.test(html)) {
       addFailure(file, `contains ${rule.label}`);
     }
+  }
+}
+
+for (const file of runtimeJsFiles) {
+  const js = readProjectFile(file);
+  for (const rule of forbiddenRuntime) {
+    if (rule.pattern.test(js)) {
+      addFailure(file, `contains ${rule.label}`);
+    }
+  }
+}
+
+for (const file of serverDeploymentFiles) {
+  const text = readProjectFile(file);
+  for (const rule of forbiddenServerDeployment) {
+    if (rule.pattern.test(text)) {
+      addFailure(file, `contains ${rule.label}`);
+    }
+  }
+}
+
+const envFiles = [
+  'docs/core/env.js',
+  'docs/preview/core/env.js',
+];
+
+for (const file of envFiles) {
+  const js = readProjectFile(file);
+  for (const field of ['window.YasnaEnv', 'project', 'apiBase', 'telegramBot', 'isQuarantine', 'realtimeDisabled']) {
+    if (!js.includes(field)) addFailure(file, `missing YasnaEnv field ${field}`);
+  }
+}
+
+for (const file of activeHtmlFiles) {
+  const html = readProjectFile(file);
+  if (!/core\/env\.js/.test(html)) {
+    addFailure(file, 'must load core/env.js');
   }
 }
 

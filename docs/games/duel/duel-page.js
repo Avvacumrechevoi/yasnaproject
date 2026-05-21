@@ -1870,7 +1870,7 @@
         React.createElement('div', null,
           React.createElement('a', { href: 'start.html' }, 'К Ясне'),
           ' · ',
-          React.createElement('a', { href: 'https://github.com/Avvacumrechevoi/yasnanegotiations', target: '_blank', rel: 'noopener' }, 'GitHub')
+          React.createElement('a', { href: 'https://github.com/Avvacumrechevoi/yasnaproject', target: '_blank', rel: 'noopener' }, 'GitHub')
         ),
         React.createElement('div', { className: 'dp-footer-version' }, 'Ясна · v2.0 · мая 2026')
       ),
