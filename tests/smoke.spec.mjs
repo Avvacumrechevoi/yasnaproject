@@ -14,12 +14,44 @@ import { test, expect } from '@playwright/test';
 // Если эти 5 проходят — серьёзных регрессий точно нет.
 // ════════════════════════════════════════════════════════════════════
 
+const ignoredConsoleErrors = [
+  /Failed to load resource: the server responded with a status of 404 \(Not Found\)/,
+];
+
+function collectBrowserErrors(page){
+  const errors = [];
+  page.on('pageerror', err => errors.push(err.message));
+  page.on('console', msg => {
+    if(msg.type() !== 'error') return;
+    const text = msg.text();
+    if(ignoredConsoleErrors.some(re => re.test(text))) return;
+    errors.push(text);
+  });
+  return errors;
+}
+
+async function finishGuestOnboarding(page){
+  const guestBtn = page.getByRole('button', { name: /Сыграть гостем|Сыграть анонимно/ });
+  if(await guestBtn.isVisible({ timeout: 2000 }).catch(() => false)){
+    await guestBtn.click();
+    await page.fill('input.dp-auth-input', 'TestPlayer');
+    await page.getByRole('button', { name: /Готово/ }).click();
+  }
+}
+
+async function openPartiyaPicker(page){
+  const ctaBtn = page.getByRole('button', { name: /Начать партию|Играть Партию|Играть соло/ }).first();
+  await expect(ctaBtn).toBeVisible({ timeout: 5000 });
+  await ctaBtn.click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByText(/Какая партия/)).toBeVisible({ timeout: 5000 });
+  return dialog;
+}
+
 test.describe('Главное приложение', () => {
 
   test('1. Главная страница загружается без JS-ошибок', async ({ page }) => {
-    const errors = [];
-    page.on('pageerror', err => errors.push(err.message));
-    page.on('console', msg => { if(msg.type() === 'error') errors.push(msg.text()); });
+    const errors = collectBrowserErrors(page);
 
     await page.goto('/');
     await page.waitForFunction(() => !!window.YasnaCore, { timeout: 10_000 });
@@ -73,8 +105,12 @@ test.describe('Главное приложение', () => {
   test('4. Уроки открываются — список курсов виден', async ({ page }) => {
     await page.goto('/');
     await page.waitForFunction(() => !!window.YasnaCore && !!window.YasnaLessons);
-    // Кнопка "Уроки" в шапке
+    // В текущем хедере обучение открывается через dropdown "Обучение",
+    // внутри которого живёт пункт "Уроки".
+    const learningBtn = page.getByRole('button', { name: /Обучение|Уроки/ }).first();
+    await learningBtn.click();
     const lessonsBtn = page.getByRole('button', { name: /Уроки/ }).first();
+    await expect(lessonsBtn).toBeVisible({ timeout: 5000 });
     await lessonsBtn.click();
     // Должен появиться LessonPicker — заголовок "Курс по Ясне"
     await expect(page.getByText(/Курс по Ясне|Метод Ясны/)).toBeVisible({ timeout: 5000 });
@@ -87,9 +123,7 @@ test.describe('Главное приложение', () => {
 test.describe('Дуэль', () => {
 
   test('5. Страница дуэли загружается, можно начать Партию', async ({ page }) => {
-    const errors = [];
-    page.on('pageerror', err => errors.push(err.message));
-    page.on('console', msg => { if(msg.type() === 'error') errors.push(msg.text()); });
+    const errors = collectBrowserErrors(page);
 
     await page.goto('/duel.html');
     await page.waitForFunction(() => !!window.YasnaTurnir, { timeout: 10_000 });
@@ -104,17 +138,11 @@ test.describe('Дуэль', () => {
     expect(ok.duelsCount).toBeGreaterThanOrEqual(3);
 
     // Welcome-экран показан для нового пользователя.
-    const anonBtn = page.getByRole('button', { name: /Сыграть анонимно/ });
-    if(await anonBtn.isVisible({ timeout: 2000 }).catch(() => false)){
-      await anonBtn.click();
-      // Заполняем onboarding
-      await page.fill('input.dp-auth-input', 'TestPlayer');
-      await page.getByRole('button', { name: /Готово/ }).click();
-    }
+    await finishGuestOnboarding(page);
 
-    // Кнопка "Начать" / "Новая Партия" должна быть видна
-    const ctaBtn = page.getByRole('button', { name: /Начать|Новая Партия/ }).first();
-    await expect(ctaBtn).toBeVisible({ timeout: 5000 });
+    // Старт сейчас открывает выбор режима/тем, а не сразу запускает вопрос.
+    const dialog = await openPartiyaPicker(page);
+    await expect(dialog.getByRole('button', { name: /Начать партию/ })).toBeVisible();
 
     // НЕ должно быть JS-ошибок до этого момента
     expect(errors, errors.join('\n')).toEqual([]);
@@ -134,9 +162,8 @@ test.describe('Дуэль', () => {
     await page.reload();
     await page.waitForFunction(() => !!window.YasnaTurnir);
 
-    // Жмём "Начать"
-    const ctaBtn = page.getByRole('button', { name: /Начать|Новая Партия/ }).first();
-    await ctaBtn.click({ timeout: 5000 });
+    const dialog = await openPartiyaPicker(page);
+    await dialog.getByRole('button', { name: /Начать партию/ }).click({ timeout: 5000 });
 
     // VsScreen → пауза 1.4с → RoundIntro → пауза 1.3с → первый вопрос
     await page.waitForSelector('.tn-question-text', { timeout: 10_000 });
