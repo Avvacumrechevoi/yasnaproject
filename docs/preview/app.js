@@ -942,11 +942,19 @@ function App(){
             {/* ТЕМА */}
             <div style={{padding:'12px 16px 6px',fontSize:11,fontWeight:700,letterSpacing:1.4,textTransform:'uppercase',color:'#86868b',borderTop:'1px solid #f5f5f7'}}>Тема</div>
             <button onClick={()=>{
-              try{var k='yasna_theme_vk_dark';var on=localStorage.getItem(k)==='1';localStorage.setItem(k,on?'0':'1');document.body.classList.toggle('theme-vk-dark',!on);}catch(_){}
+              try{
+                if(window.YasnaTheme) window.YasnaTheme.toggle();
+                else {
+                  var k='yasna_theme_vk_dark';
+                  var on=localStorage.getItem(k)==='1';
+                  localStorage.setItem(k,on?'0':'1');
+                  document.body.classList.toggle('theme-vk-dark',!on);
+                }
+              }catch(_){}
               setMenu(false);
             }} style={{display:'flex',alignItems:'center',gap:10,width:'100%',padding:'11px 16px',fontSize:14,color:'#1d1d1f',border:'none',background:'#fff',textAlign:'left',cursor:'pointer'}}>
-              <span style={{fontSize:15,lineHeight:1}}>{(typeof localStorage!=='undefined'&&localStorage.getItem('yasna_theme_vk_dark')==='1')?'☀':'🌑'}</span>
-              <span style={{flex:1}}>{(typeof localStorage!=='undefined'&&localStorage.getItem('yasna_theme_vk_dark')==='1')?'Светлая тема':'Тёмная тема'}</span>
+              <span style={{fontSize:15,lineHeight:1}}>{(typeof window!=='undefined'&&window.YasnaTheme&&window.YasnaTheme.current()==='dark')?'☀':'🌑'}</span>
+              <span style={{flex:1}}>{(typeof window!=='undefined'&&window.YasnaTheme&&window.YasnaTheme.current()==='dark')?'Светлая тема':'Тёмная тема'}</span>
             </button>
           </div>}
         </div>
@@ -1215,4 +1223,3 @@ function App(){
     </div>);
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
-

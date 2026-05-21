@@ -1,0 +1,246 @@
+/* Yasna design system contract.
+   This file owns theme-neutral tokens and the light/dark theme boundary.
+   Legacy component CSS can keep its selectors, but new UI should use --ys-* tokens. */
+
+:root,
+html[data-yasna-theme='light'] {
+  color-scheme: light;
+
+  --ys-theme-name: 'light';
+  --ys-color-bg: #ffffff;
+  --ys-color-bg-muted: #f5f5f7;
+  --ys-color-surface: #ffffff;
+  --ys-color-surface-muted: #f5f5f7;
+  --ys-color-surface-raised: #ffffff;
+  --ys-color-border: #d2d2d7;
+  --ys-color-border-soft: #e5e5ea;
+  --ys-color-text: #1d1d1f;
+  --ys-color-text-muted: #6e6e73;
+  --ys-color-text-subtle: #86868b;
+  --ys-color-accent: #0071e3;
+  --ys-color-accent-hover: #0058b8;
+  --ys-color-accent-soft: rgba(0, 113, 227, .10);
+  --ys-color-success: #248a3d;
+  --ys-color-danger: #d70015;
+  --ys-color-warning: #ba7517;
+  --ys-color-focus: rgba(0, 113, 227, .18);
+
+  --ys-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  --ys-font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Georgia, serif;
+  --ys-font-mono: 'SF Mono', Menlo, Consolas, monospace;
+
+  --ys-text-xs: 12px;
+  --ys-text-sm: 13px;
+  --ys-text-md: 14px;
+  --ys-text-lg: 16px;
+  --ys-text-xl: 20px;
+  --ys-line-tight: 1.2;
+  --ys-line-normal: 1.45;
+
+  --ys-space-1: 4px;
+  --ys-space-2: 6px;
+  --ys-space-3: 8px;
+  --ys-space-4: 12px;
+  --ys-space-5: 16px;
+  --ys-space-6: 20px;
+  --ys-space-7: 24px;
+  --ys-space-8: 32px;
+
+  --ys-radius-xs: 4px;
+  --ys-radius-sm: 6px;
+  --ys-radius-md: 8px;
+  --ys-radius-lg: 10px;
+  --ys-radius-xl: 12px;
+
+  --ys-shadow-sm: 0 1px 3px rgba(0, 0, 0, .06);
+  --ys-shadow-md: 0 4px 16px rgba(0, 0, 0, .10);
+  --ys-shadow-lg: 0 10px 40px rgba(0, 0, 0, .20);
+
+  /* Legacy aliases used by docs/styles.css. New code should use --ys-* directly. */
+  --bg: var(--ys-color-bg);
+  --bg2: var(--ys-color-bg-muted);
+  --bg3: #e8e8ed;
+  --border: var(--ys-color-border);
+  --accent: var(--ys-color-accent);
+  --txt: var(--ys-color-text);
+  --txt2: var(--ys-color-text-muted);
+  --txt3: var(--ys-color-text-subtle);
+  --serif: var(--ys-font-display);
+  --sans: var(--ys-font-sans);
+}
+
+html[data-yasna-theme='dark'],
+body.theme-vk-dark {
+  color-scheme: dark;
+
+  --ys-theme-name: 'dark';
+  --ys-color-bg: #151515;
+  --ys-color-bg-muted: #1c1c1e;
+  --ys-color-surface: #212121;
+  --ys-color-surface-muted: #2a2a2c;
+  --ys-color-surface-raised: #262626;
+  --ys-color-border: rgba(136, 137, 141, .26);
+  --ys-color-border-soft: rgba(136, 137, 141, .18);
+  --ys-color-text: #fefefe;
+  --ys-color-text-muted: #a8b1be;
+  --ys-color-text-subtle: #626d7a;
+  --ys-color-accent: #0077ff;
+  --ys-color-accent-hover: #16a7ff;
+  --ys-color-accent-soft: rgba(0, 119, 255, .16);
+  --ys-color-success: #59a840;
+  --ys-color-danger: #f23741;
+  --ys-color-warning: #ffca4d;
+  --ys-color-focus: rgba(22, 167, 255, .24);
+  --ys-shadow-sm: 0 2px 6px rgba(0, 0, 0, .24);
+  --ys-shadow-md: 0 6px 22px rgba(0, 0, 0, .34);
+  --ys-shadow-lg: 0 16px 48px rgba(0, 0, 0, .50);
+
+  --bg: var(--ys-color-bg);
+  --bg2: var(--ys-color-bg-muted);
+  --bg3: var(--ys-color-surface-muted);
+  --border: var(--ys-color-border);
+  --accent: var(--ys-color-accent);
+  --txt: var(--ys-color-text);
+  --txt2: var(--ys-color-text-muted);
+  --txt3: var(--ys-color-text-subtle);
+}
+
+html[data-yasna-theme='dark'] body {
+  background: var(--ys-color-bg);
+  color: var(--ys-color-text);
+}
+
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--ys-color-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--ys-color-focus);
+}
+
+.ys-button {
+  min-height: 36px;
+  padding: 0 var(--ys-space-5);
+  border: 1px solid var(--ys-color-border);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface);
+  color: var(--ys-color-text);
+  font: 600 var(--ys-text-md) / 1 var(--ys-font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ys-space-3);
+}
+
+.ys-button:hover {
+  background: var(--ys-color-surface-muted);
+}
+
+.ys-button--primary {
+  background: var(--ys-color-accent);
+  border-color: var(--ys-color-accent);
+  color: #fff;
+}
+
+.ys-button--primary:hover {
+  background: var(--ys-color-accent-hover);
+  border-color: var(--ys-color-accent-hover);
+}
+
+.ys-card {
+  background: var(--ys-color-surface-raised);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-xl);
+  box-shadow: var(--ys-shadow-sm);
+  color: var(--ys-color-text);
+}
+
+.dp-theme-toggle {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: var(--ys-radius-lg);
+  border: 1px solid var(--ys-color-border-soft);
+  background: var(--ys-color-surface);
+  color: var(--ys-color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font: 600 var(--ys-text-md) / 1 var(--ys-font-sans);
+  box-shadow: var(--ys-shadow-sm);
+}
+
+.dp-theme-toggle:hover {
+  background: var(--ys-color-surface-muted);
+}
+
+.dp-theme-toggle[aria-pressed='true'] {
+  background: var(--ys-color-accent-soft);
+  border-color: var(--ys-color-accent);
+  color: var(--ys-color-accent-hover);
+}
+
+.dp-theme-toggle--floating {
+  position: fixed;
+  right: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  z-index: 80;
+}
+
+body.theme-vk-dark .ad-shell,
+html[data-yasna-theme='dark'] .ad-shell {
+  color: var(--ys-color-text) !important;
+}
+
+body.theme-vk-dark .ad-themes,
+body.theme-vk-dark .ad-questions,
+body.theme-vk-dark .ad-modal,
+html[data-yasna-theme='dark'] .ad-themes,
+html[data-yasna-theme='dark'] .ad-questions,
+html[data-yasna-theme='dark'] .ad-modal {
+  background: var(--ys-color-surface-raised) !important;
+  border-color: var(--ys-color-border-soft) !important;
+  color: var(--ys-color-text) !important;
+}
+
+body.theme-vk-dark .ad-tab,
+body.theme-vk-dark .ad-btn,
+body.theme-vk-dark .ad-q-action,
+html[data-yasna-theme='dark'] .ad-tab,
+html[data-yasna-theme='dark'] .ad-btn,
+html[data-yasna-theme='dark'] .ad-q-action {
+  background: var(--ys-color-surface) !important;
+  border-color: var(--ys-color-border) !important;
+  color: var(--ys-color-text) !important;
+}
+
+body.theme-vk-dark .ad-tab.is-active,
+html[data-yasna-theme='dark'] .ad-tab.is-active {
+  background: var(--ys-color-accent-soft) !important;
+  color: var(--ys-color-accent-hover) !important;
+}
+
+body.theme-vk-dark .ad-q,
+body.theme-vk-dark .ad-stats,
+body.theme-vk-dark .ad-form input[type=text],
+body.theme-vk-dark .ad-form select,
+body.theme-vk-dark .ad-form textarea,
+html[data-yasna-theme='dark'] .ad-q,
+html[data-yasna-theme='dark'] .ad-stats,
+html[data-yasna-theme='dark'] .ad-form input[type=text],
+html[data-yasna-theme='dark'] .ad-form select,
+html[data-yasna-theme='dark'] .ad-form textarea {
+  background: var(--ys-color-surface-muted) !important;
+  border-color: var(--ys-color-border) !important;
+  color: var(--ys-color-text) !important;
+}
+
+body.theme-vk-dark .ad-hdr-meta,
+body.theme-vk-dark .ad-theme-count,
+body.theme-vk-dark .ad-q-type,
+body.theme-vk-dark .ad-q-text small,
+html[data-yasna-theme='dark'] .ad-hdr-meta,
+html[data-yasna-theme='dark'] .ad-theme-count,
+html[data-yasna-theme='dark'] .ad-q-type,
+html[data-yasna-theme='dark'] .ad-q-text small {
+  color: var(--ys-color-text-muted) !important;
+}

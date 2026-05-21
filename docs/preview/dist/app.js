@@ -1,4 +1,4 @@
-/* Yasna bundle: app.js — собран 2026-05-10T01:07:29.538Z */
+/* Yasna bundle: app.js — собран 2026-05-21T20:05:14.193Z */
 /* ─── core/data.js ─── */
 ;(function(){
 (function() {
@@ -11429,14 +11429,17 @@ function App() {
     setMenu(false);
   }, style: { display: "block", width: "100%", padding: "11px 16px", fontSize: 14, color: "#1d1d1f", border: "none", borderBottom: "1px solid #f5f5f7", background: "#fff", textAlign: "left", cursor: "pointer" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u042F\u0441\u043D\u044B"), /* @__PURE__ */ React.createElement("div", { style: { padding: "12px 16px 6px", fontSize: 11, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase", color: "#86868b", borderTop: "1px solid #f5f5f7" } }, "\u0422\u0435\u043C\u0430"), /* @__PURE__ */ React.createElement("button", { onClick: () => {
     try {
-      var k = "yasna_theme_vk_dark";
-      var on = localStorage.getItem(k) === "1";
-      localStorage.setItem(k, on ? "0" : "1");
-      document.body.classList.toggle("theme-vk-dark", !on);
+      if (window.YasnaTheme) window.YasnaTheme.toggle();
+      else {
+        var k = "yasna_theme_vk_dark";
+        var on = localStorage.getItem(k) === "1";
+        localStorage.setItem(k, on ? "0" : "1");
+        document.body.classList.toggle("theme-vk-dark", !on);
+      }
     } catch (_) {
     }
     setMenu(false);
-  }, style: { display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "11px 16px", fontSize: 14, color: "#1d1d1f", border: "none", background: "#fff", textAlign: "left", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 15, lineHeight: 1 } }, typeof localStorage !== "undefined" && localStorage.getItem("yasna_theme_vk_dark") === "1" ? "\u2600" : "\u{1F311}"), /* @__PURE__ */ React.createElement("span", { style: { flex: 1 } }, typeof localStorage !== "undefined" && localStorage.getItem("yasna_theme_vk_dark") === "1" ? "\u0421\u0432\u0435\u0442\u043B\u0430\u044F \u0442\u0435\u043C\u0430" : "\u0422\u0451\u043C\u043D\u0430\u044F \u0442\u0435\u043C\u0430"))))), learnOpen && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { onClick: () => setLearnOpen(false), style: { position: "fixed", inset: 0, zIndex: 99, background: "transparent" } }), /* @__PURE__ */ React.createElement("div", { className: "hdr-learn-dropdown", style: { position: "fixed", top: 60, right: 16, minWidth: 240, maxWidth: "min(320px, calc(100vw - 32px))", maxHeight: "calc(100vh - 80px)", overflowY: "auto", background: "#fff", border: "1px solid #d2d2d7", borderRadius: 12, boxShadow: "0 12px 36px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.06)", zIndex: 100, animation: "slideDown .2s cubic-bezier(.16,1,.3,1)" } }, /* @__PURE__ */ React.createElement("button", { onClick: () => {
+  }, style: { display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "11px 16px", fontSize: 14, color: "#1d1d1f", border: "none", background: "#fff", textAlign: "left", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 15, lineHeight: 1 } }, typeof window !== "undefined" && window.YasnaTheme && window.YasnaTheme.current() === "dark" ? "\u2600" : "\u{1F311}"), /* @__PURE__ */ React.createElement("span", { style: { flex: 1 } }, typeof window !== "undefined" && window.YasnaTheme && window.YasnaTheme.current() === "dark" ? "\u0421\u0432\u0435\u0442\u043B\u0430\u044F \u0442\u0435\u043C\u0430" : "\u0422\u0451\u043C\u043D\u0430\u044F \u0442\u0435\u043C\u0430"))))), learnOpen && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { onClick: () => setLearnOpen(false), style: { position: "fixed", inset: 0, zIndex: 99, background: "transparent" } }), /* @__PURE__ */ React.createElement("div", { className: "hdr-learn-dropdown", style: { position: "fixed", top: 60, right: 16, minWidth: 240, maxWidth: "min(320px, calc(100vw - 32px))", maxHeight: "calc(100vh - 80px)", overflowY: "auto", background: "#fff", border: "1px solid #d2d2d7", borderRadius: 12, boxShadow: "0 12px 36px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.06)", zIndex: 100, animation: "slideDown .2s cubic-bezier(.16,1,.3,1)" } }, /* @__PURE__ */ React.createElement("button", { onClick: () => {
     setLessonPicker(true);
     setLearnOpen(false);
   }, style: { display: "flex", width: "100%", padding: "12px 16px", fontSize: 13, color: "#1d1d1f", border: "none", borderBottom: "1px solid #f5f5f7", background: "#fff", textAlign: "left", cursor: "pointer", fontWeight: 500 } }, "\u0423\u0440\u043E\u043A\u0438 ", /* @__PURE__ */ React.createElement("span", { style: { color: "#86868b", fontSize: 11, marginLeft: 6, fontWeight: 400 } }, "\xB7 4 \u0448\u0430\u0433\u0430")), (() => {

@@ -18,7 +18,9 @@
 <!-- yasnaproject quarantine: keep shared production backend disabled until isolated endpoints exist. -->
 <meta name="yasna:api"    content=""/>
 <meta name="yasna:tg-bot" content=""/>
+<meta name="yasna:theme"  content="light"/>
 
+<link rel="stylesheet" href="design-system.css?v=1"/>
 <link rel="stylesheet" href="styles.css"/>
 <link rel="stylesheet" href="games/duel/duel-page.css"/>
 </head>
@@ -39,6 +41,7 @@
   })();
 </script>
 <script src="core/env.js?v=1"></script>
+<script src="core/theme.js?v=1"></script>
 
 <!-- Pre-built bundle: core/* + games/duel/* + duel-page (см. scripts/build.mjs) -->
 <!-- Cache-busting: меняй версию при каждом релизе чтобы CDN отдавал свежий файл -->

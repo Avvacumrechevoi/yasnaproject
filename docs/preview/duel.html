@@ -18,7 +18,9 @@
 <!-- yasnaproject quarantine: keep shared production backend disabled until isolated endpoints exist. -->
 <meta name="yasna:api"    content=""/>
 <meta name="yasna:tg-bot" content=""/>
+<meta name="yasna:theme"  content="light"/>
 
+<link rel="stylesheet" href="design-system.css?v=1"/>
 <link rel="stylesheet" href="styles.css"/>
 <link rel="stylesheet" href="games/duel/duel-page.css"/>
 <!-- VK Dark Theme — экспериментальная альтернатива (только preview) -->
@@ -26,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=PT+Mono&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="../vk-tech-tokens.css?v=9"/>
+<link rel="stylesheet" href="vk-tech-tokens.css?v=9"/>
 <link rel="stylesheet" href="games/duel/theme-vk-dark.css?v=14"/>
 <link rel="stylesheet" href="games/duel/vk-scheme.css?v=9"/>
 </head>
@@ -47,101 +49,11 @@
   })();
 </script>
 <script src="core/env.js?v=1"></script>
+<script src="core/theme.js?v=1"></script>
 
 <!-- Pre-built bundle: core/* + games/duel/* + duel-page (см. scripts/build.mjs) -->
 <!-- Cache-busting: меняй версию при каждом релизе чтобы CDN отдавал свежий файл -->
 <script src="dist/duel.min.js?v=picker2"></script>
 
-<!-- ═══ Theme Toggle — только в preview ═══════════════════════
-     Переключатель экспериментальной темной темы. Применяет/снимает
-     класс `theme-vk-dark` на body. Состояние в localStorage.
-     ─────────────────────────────────────────────────────────── -->
-<script>
-(function(){
-  'use strict';
-  var STORAGE_KEY = 'yasna_theme_vk_dark';
-  var BODY_CLASS = 'theme-vk-dark';
-
-  function isOn(){
-    try { return localStorage.getItem(STORAGE_KEY) === '1'; }
-    catch(_){ return false; }
-  }
-  function apply(on){
-    if(on) document.body.classList.add(BODY_CLASS);
-    else document.body.classList.remove(BODY_CLASS);
-    var btn = document.getElementById('dp-theme-toggle');
-    if(btn){
-      var icon = btn.querySelector('.dp-theme-toggle-icon');
-      if(icon) icon.textContent = on ? '☀' : '🌑';
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      btn.title = on ? 'Светлая тема' : 'Тёмная тема';
-    }
-  }
-  function toggle(){
-    var next = !isOn();
-    try { localStorage.setItem(STORAGE_KEY, next ? '1' : '0'); } catch(_){}
-    apply(next);
-  }
-
-  // Применяем при загрузке (до первой отрисовки если возможно)
-  apply(isOn());
-
-  // ─── Кнопка теперь icon-only 32×32, инжектится В header (.dp-header-auth)
-  //     перед кнопкой «Войти/?». MutationObserver re-инжектит если React
-  //     пере-смонтировал хедер. ───
-  function makeButton(){
-    var btn = document.createElement('button');
-    btn.id = 'dp-theme-toggle';
-    btn.className = 'dp-theme-toggle dp-theme-toggle--header';
-    btn.type = 'button';
-    // Icon only — никаких label-span'ов
-    btn.innerHTML = '<span class="dp-theme-toggle-icon" aria-hidden="true">🌑</span>';
-    btn.addEventListener('click', toggle);
-    return btn;
-  }
-  function mountButton(){
-    if(document.getElementById('dp-theme-toggle')) return;
-    var auth = document.querySelector('.dp-header-auth');
-    var btn = makeButton();
-    if(auth){
-      // Вставляем ПЕРЕД help-btn (?) если есть, иначе в начало auth
-      var helpBtn = auth.querySelector('.dp-help-btn');
-      if(helpBtn){
-        auth.insertBefore(btn, helpBtn);
-      } else {
-        auth.insertBefore(btn, auth.firstChild);
-      }
-    } else {
-      // Fallback: если хедер ещё не отрендерен — кладём на body как раньше
-      document.body.appendChild(btn);
-    }
-    apply(isOn());
-  }
-  function startObserver(){
-    mountButton();
-    var obs = new MutationObserver(function(){
-      // Если кнопка пропала (React re-mount) — инжектим заново
-      if(!document.getElementById('dp-theme-toggle')){
-        mountButton();
-      } else {
-        // Если кнопка осталась на body, а .dp-header-auth уже появился — переносим внутрь
-        var btn = document.getElementById('dp-theme-toggle');
-        var auth = document.querySelector('.dp-header-auth');
-        if(btn && auth && btn.parentElement === document.body){
-          var helpBtn = auth.querySelector('.dp-help-btn');
-          if(helpBtn) auth.insertBefore(btn, helpBtn);
-          else auth.insertBefore(btn, auth.firstChild);
-        }
-      }
-    });
-    obs.observe(document.body, { childList: true, subtree: true });
-  }
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', startObserver);
-  } else {
-    startObserver();
-  }
-})();
-</script>
 </body>
 </html>

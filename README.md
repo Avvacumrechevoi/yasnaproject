@@ -23,6 +23,7 @@
 - Deploy проходит через GitHub Actions.
 - Перед публикацией выполняются:
   - `npm run check:isolation`
+  - `npm run check:safety`
   - `npm run build`
   - `npm test`
 - Shared Yandex API, Telegram bot и Firebase realtime PvP отключены в новой
@@ -33,8 +34,9 @@
 ```text
 docs/                    Static app для GitHub Pages
 docs/preview/            Дублирующая preview-ветка внутри static app
+docs/design-system.css   Контракт токенов и light/dark тем
 docs/games/duel/         Дуэль, турниры, локальная статистика, leaderboard UI
-docs/core/               Ядро Ясны: данные, диаграмма, 3D, карточки, проверки
+docs/core/               Ядро Ясны: env, theme, данные, 3D, карточки, проверки
 content/                 Исходный контент для content bundle
 scripts/                 Сборка, валидация, isolation guard, static server
 server/                  Заготовки Yandex Cloud Functions и YDB
@@ -47,7 +49,7 @@ tests/                   Playwright smoke tests
 
 ```bash
 npm ci
-npm run check:isolation
+npm run check:safety
 npm run build
 npm test
 npm run serve
@@ -58,6 +60,7 @@ npm run serve
 
 ```bash
 node scripts/check-environment-isolation.mjs
+node scripts/check-theme-contract.mjs
 node scripts/validate-content.mjs
 ```
 
@@ -69,6 +72,9 @@ node scripts/validate-content.mjs
   работ.
 - [ENVIRONMENT_ISOLATION.md](./ENVIRONMENT_ISOLATION.md) - карантин shared
   ресурсов.
+- [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) - токены, тема и правила миграции UI.
+- [FRONTEND_MODULE_MAP.md](./FRONTEND_MODULE_MAP.md) - карта runtime-страниц,
+  preview-копий и безопасных границ рефакторинга.
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - старый архитектурный аудит,
   полезен как исторический контекст, но содержит ссылки на `yasnanegotiations`.
 

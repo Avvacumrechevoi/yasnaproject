@@ -1,4 +1,4 @@
-/* Yasna bundle: duel.js — собран 2026-05-10T01:07:29.213Z */
+/* Yasna bundle: duel.js — собран 2026-05-21T20:05:14.073Z */
 /* ─── core/data.js ─── */
 ;(function(){
 (function() {
@@ -20830,6 +20830,9 @@ window.YasnaCore = {
   let auth = null;
   let authPromise = null;
   function init() {
+    if (typeof window !== "undefined" && window.YASNA_DISABLE_SHARED_REALTIME === true) {
+      throw new Error("Realtime PvP disabled in yasnaproject quarantine mode.");
+    }
     if (app) return;
     if (typeof firebase === "undefined") {
       throw new Error("Firebase SDK \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C script-\u0442\u0435\u0433\u0438 \u0432 duel.html.");
@@ -23223,7 +23226,7 @@ window.YasnaCore = {
           null,
           React.createElement("a", { href: "start.html" }, "\u041A \u042F\u0441\u043D\u0435"),
           " \xB7 ",
-          React.createElement("a", { href: "https://github.com/Avvacumrechevoi/yasnanegotiations", target: "_blank", rel: "noopener" }, "GitHub")
+          React.createElement("a", { href: "https://github.com/Avvacumrechevoi/yasnaproject", target: "_blank", rel: "noopener" }, "GitHub")
         ),
         React.createElement("div", { className: "dp-footer-version" }, "\u042F\u0441\u043D\u0430 \xB7 v2.0 \xB7 \u043C\u0430\u044F 2026")
       ),

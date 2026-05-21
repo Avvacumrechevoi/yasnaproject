@@ -60,6 +60,8 @@ test.describe('Главное приложение', () => {
     const globals = await page.evaluate(() => ({
       YasnaData: typeof window.YasnaData,
       YasnaCore: typeof window.YasnaCore,
+      YasnaEnv: window.YasnaEnv,
+      YasnaTheme: typeof window.YasnaTheme,
       YasnaLessons: typeof window.YasnaLessons,
       YasnaTours: typeof window.YasnaTours,
       yasnaCount: window.YasnaData?.T?.length ?? 0,
@@ -67,6 +69,14 @@ test.describe('Главное приложение', () => {
     }));
     expect(globals.YasnaData).toBe('object');
     expect(globals.YasnaCore).toBe('object');
+    expect(globals.YasnaEnv).toMatchObject({
+      project: 'yasnaproject',
+      apiBase: '',
+      telegramBot: '',
+      isQuarantine: true,
+      realtimeDisabled: true,
+    });
+    expect(globals.YasnaTheme).toBe('object');
     expect(globals.YasnaLessons).toBe('object');
     expect(globals.YasnaTours).toBe('object');
     expect(globals.yasnaCount).toBeGreaterThanOrEqual(40); // 44 шаблона
@@ -116,6 +126,65 @@ test.describe('Главное приложение', () => {
     await expect(page.getByRole('heading', { name: 'Курс по Ясне' })).toBeVisible({ timeout: 5000 });
     // Должен быть как минимум 1 ready-урок (l1_intro точно)
     await expect(page.getByText(/Что такое Ясна/).first()).toBeVisible();
+  });
+
+});
+
+test.describe('Environment / themes', () => {
+
+  test('YasnaEnv остается в quarantine на активных runtime-страницах', async ({ page }) => {
+    for (const url of ['/', '/duel.html']) {
+      await page.goto(url);
+      await page.waitForFunction(() => !!window.YasnaEnv);
+      const env = await page.evaluate(() => window.YasnaEnv);
+      expect(env, `YasnaEnv на ${url}`).toMatchObject({
+        project: 'yasnaproject',
+        apiBase: '',
+        telegramBot: '',
+        isQuarantine: true,
+        realtimeDisabled: true,
+      });
+    }
+  });
+
+  test('светлая и темная темы переключаются через YasnaTheme', async ({ page }) => {
+    const errors = collectBrowserErrors(page);
+
+    await page.goto('/');
+    await page.waitForFunction(() => !!window.YasnaTheme && !!window.YasnaCore);
+
+    const states = await page.evaluate(() => {
+      window.YasnaTheme.set('light');
+      const light = {
+        mode: document.documentElement.dataset.yasnaTheme,
+        bodyDark: document.body.classList.contains('theme-vk-dark'),
+        bg: getComputedStyle(document.documentElement).getPropertyValue('--ys-color-bg').trim(),
+        text: getComputedStyle(document.documentElement).getPropertyValue('--ys-color-text').trim(),
+        themeColor: document.querySelector('meta[name="theme-color"]')?.content,
+      };
+
+      window.YasnaTheme.set('dark');
+      const dark = {
+        mode: document.documentElement.dataset.yasnaTheme,
+        bodyDark: document.body.classList.contains('theme-vk-dark'),
+        bg: getComputedStyle(document.documentElement).getPropertyValue('--ys-color-bg').trim(),
+        text: getComputedStyle(document.documentElement).getPropertyValue('--ys-color-text').trim(),
+        themeColor: document.querySelector('meta[name="theme-color"]')?.content,
+      };
+
+      window.YasnaTheme.set('light');
+      return { light, dark, finalMode: window.YasnaTheme.current() };
+    });
+
+    expect(states.light.mode).toBe('light');
+    expect(states.light.bodyDark).toBe(false);
+    expect(states.dark.mode).toBe('dark');
+    expect(states.dark.bodyDark).toBe(true);
+    expect(states.dark.bg).not.toBe(states.light.bg);
+    expect(states.dark.text).not.toBe(states.light.text);
+    expect(states.dark.themeColor).toBe('#151515');
+    expect(states.finalMode).toBe('light');
+    expect(errors, errors.join('\n')).toEqual([]);
   });
 
 });

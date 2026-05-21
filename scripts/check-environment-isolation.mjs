@@ -3,7 +3,10 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const defaultRootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const rootDir = process.env.YASNA_ISOLATION_ROOT
+  ? resolve(process.env.YASNA_ISOLATION_ROOT)
+  : defaultRootDir;
 const failures = [];
 
 function readProjectFile(file) {
@@ -26,6 +29,8 @@ const activeHtmlFiles = [
 ];
 
 const runtimeJsFiles = [
+  'docs/core/theme.js',
+  'docs/preview/core/theme.js',
   'docs/games/duel/duel.js',
   'docs/preview/games/duel/duel.js',
   'docs/games/duel/duel-page.js',
