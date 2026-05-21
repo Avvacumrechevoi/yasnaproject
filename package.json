@@ -1,14 +1,15 @@
 {
-  "name": "yasnanegotiations",
+  "name": "yasnaproject",
   "version": "1.0.0",
   "private": true,
   "description": "Ясна — интерактивный тренажёр (12-полочная звёздная диаграмма)",
   "scripts": {
     "validate:content": "node scripts/validate-content.mjs",
+    "check:isolation": "node scripts/check-environment-isolation.mjs",
     "build:content": "node scripts/validate-content.mjs && node scripts/build-content.mjs",
-    "build": "npm run build:content && node scripts/build.mjs",
+    "build": "npm run check:isolation && npm run build:content && node scripts/build.mjs",
     "build:watch": "node scripts/build.mjs --watch",
-    "build:dev": "npm run build:content && node scripts/build.mjs --dev",
+    "build:dev": "npm run check:isolation && npm run build:content && node scripts/build.mjs --dev",
     "sync": "bash scripts/sync-prod.sh",
     "sync:content": "cp -v ../../Сутки/КОНТЕНТНОЕ_ДЕРЕВО/*.json ../../Сутки/КОНТЕНТНОЕ_ДЕРЕВО/*.md content/",
     "serve": "node scripts/serve.mjs",

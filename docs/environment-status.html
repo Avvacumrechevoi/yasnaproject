@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex"/>
+<title>yasnaproject · статус среды</title>
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#f6f7f9;
+    --ink:#1d1d1f;
+    --muted:#6b7280;
+    --line:#d9dee7;
+    --ok:#147a43;
+    --warn:#9a5b00;
+    --off:#7b2532;
+    --panel:#ffffff;
+    --blue:#0b5cad;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  main{
+    width:min(1080px,calc(100% - 32px));
+    margin:0 auto;
+    padding:40px 0 56px;
+  }
+  header{
+    display:flex;
+    justify-content:space-between;
+    gap:24px;
+    align-items:flex-start;
+    padding-bottom:22px;
+    border-bottom:1px solid var(--line);
+  }
+  h1{
+    margin:0 0 8px;
+    font-size:clamp(28px,4vw,44px);
+    line-height:1.1;
+    font-weight:700;
+    letter-spacing:0;
+  }
+  p{margin:0;color:var(--muted);max-width:720px}
+  .stamp{
+    min-width:160px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:8px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .stamp strong{
+    display:block;
+    color:var(--ink);
+    font-size:14px;
+  }
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin:24px 0;
+  }
+  .metric{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px;
+  }
+  .metric span{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+  .metric strong{
+    display:block;
+    margin-top:6px;
+    font-size:22px;
+    line-height:1.2;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  th,td{
+    padding:13px 14px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    vertical-align:top;
+    font-size:14px;
+  }
+  th{
+    color:#374151;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    background:#eef2f7;
+  }
+  tr:last-child td{border-bottom:0}
+  .state{
+    display:inline-flex;
+    align-items:center;
+    min-height:24px;
+    padding:2px 9px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .state.ok{color:var(--ok);background:#e9f7ef}
+  .state.warn{color:var(--warn);background:#fff3d6}
+  .state.off{color:var(--off);background:#fde8ec}
+  .links{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:20px;
+  }
+  a{
+    color:var(--blue);
+    text-decoration:none;
+    font-weight:600;
+  }
+  a:hover{text-decoration:underline}
+  @media(max-width:760px){
+    main{width:min(100% - 24px,1080px);padding-top:24px}
+    header{display:block}
+    .stamp{margin-top:16px;width:100%}
+    .summary{grid-template-columns:1fr}
+    table,tbody,tr,td{display:block}
+    thead{display:none}
+    tr{border-bottom:1px solid var(--line)}
+    tr:last-child{border-bottom:0}
+    td{border-bottom:0;padding:10px 12px}
+    td::before{
+      content:attr(data-label);
+      display:block;
+      margin-bottom:3px;
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>yasnaproject · статус среды</h1>
+      <p>Новая ветка разработки изолирована от старого продакшена. Старый репозиторий и его GitHub Pages не меняются, пока отдельная инфраструктура для нового проекта не готова.</p>
+    </div>
+    <div class="stamp">
+      <strong>Quarantine mode</strong>
+      Обновлено: 2026-05-21
+    </div>
+  </header>
+
+  <section class="summary" aria-label="Краткий статус">
+    <div class="metric"><span>Репозиторий</span><strong>yasnaproject</strong></div>
+    <div class="metric"><span>Backend</span><strong>отключён</strong></div>
+    <div class="metric"><span>Старый прод</span><strong>не трогаем</strong></div>
+  </section>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Компонент</th>
+        <th>Статус</th>
+        <th>Что это значит</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Компонент">Baseline content bundle</td>
+        <td data-label="Статус"><span class="state ok">работает</span></td>
+        <td data-label="Что это значит">Локальный контент из <code>docs/games/duel/content.bundle.js</code> доступен без обращения к старому backend.</td>
+      </tr>
+      <tr>
+        <td data-label="Компонент">Yandex API Gateway</td>
+        <td data-label="Статус"><span class="state off">отключён</span></td>
+        <td data-label="Что это значит"><code>yasna:api</code> оставлен пустым, чтобы новый проект не писал в старые таблицы и не публиковал старый контент.</td>
+      </tr>
+      <tr>
+        <td data-label="Компонент">Telegram login</td>
+        <td data-label="Статус"><span class="state off">отключён</span></td>
+        <td data-label="Что это значит"><code>yasna:tg-bot</code> оставлен пустым до отдельного бота или явного решения использовать общий auth.</td>
+      </tr>
+      <tr>
+        <td data-label="Компонент">Realtime PvP</td>
+        <td data-label="Статус"><span class="state off">отключён</span></td>
+        <td data-label="Что это значит">Firebase SDK не грузится на страницах дуэли, а модуль realtime защищён флагом <code>YASNA_DISABLE_SHARED_REALTIME</code>.</td>
+      </tr>
+      <tr>
+        <td data-label="Компонент">GitHub Pages deploy</td>
+        <td data-label="Статус"><span class="state warn">только после проверок</span></td>
+        <td data-label="Что это значит">Деплой нового сайта проходит после isolation check, build и smoke tests.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav class="links" aria-label="Ссылки">
+    <a href="./index.html">Открыть приложение</a>
+    <a href="./duel.html">Открыть дуэль</a>
+  </nav>
+</main>
+</body>
+</html>

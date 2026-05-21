@@ -33,6 +33,15 @@ The new static app remains usable for local/offline baseline flows:
 - leaderboard submit/fetch is disabled;
 - realtime PvP is disabled until isolated Firebase/Yandex infrastructure exists.
 
+## Machine checks
+
+Run `npm run check:isolation` before every build/deploy. The check fails if
+active HTML pages reintroduce the old Yandex API host, old Telegram bot,
+Firebase SDK loaders, non-empty `yasna:*` meta config, or realtime PvP without
+the quarantine guard.
+
+The public status page for the new project is `docs/environment-status.html`.
+
 ## How to safely re-enable features
 
 Re-enable only after creating isolated resources for `yasnaproject`:
@@ -62,4 +71,3 @@ Re-enable only after creating isolated resources for `yasnaproject`:
 - `docs/preview/games/duel/v2/duel.html`
 - `docs/games/duel/rt-firebase.js`
 - `docs/preview/games/duel/rt-firebase.js`
-
