@@ -30,8 +30,9 @@ The implemented option is the interactive constructor. It keeps the backend in q
 
 ## Implemented Shape
 
-The trainer at `docs/negotiations.html` has four working layers:
+The trainer at `docs/negotiations.html` has five working layers:
 
+- simulator-first mode: choose a scene, answer B, see resonance/trust/tension effects;
 - step-by-step guide: an eight-step preparation flow tied to the Yasna phases;
 - scenario setup: parties, subject, give/take, hidden layer, atmosphere, exit history;
 - 12-phase Yasna map: information field through final result, with recommended phase;

@@ -19,7 +19,7 @@
 <meta name="yasna:tg-bot" content=""/>
 <meta name="yasna:theme" content="light"/>
 <link rel="stylesheet" href="../design-system.css?v=1"/>
-<link rel="stylesheet" href="../negotiations.css?v=2"/>
+<link rel="stylesheet" href="../negotiations.css?v=3"/>
 </head>
 <body class="np-page">
 <header class="np-topbar">
@@ -39,9 +39,9 @@
 <main class="np-shell" id="negotiations-trainer">
   <section class="np-context" aria-labelledby="np-title">
     <div>
-      <p class="np-kicker">Конструктор ситуации</p>
+      <p class="np-kicker">Симулятор встречи</p>
       <h1 id="np-title">Тренажер переговоров Ясны</h1>
-      <p class="np-lead">Соберите сторону A и сторону B, проверьте резонанс, противоречие 3-9, баланс дать/взять и выход, который оставляет хорошую историю.</p>
+      <p class="np-lead">Выберите ситуацию, отвечайте на реплики B и сразу смотрите последствия: резонанс, доверие, напряжение и следующий ход.</p>
     </div>
     <div class="np-context-facts" aria-label="Опоры методики">
       <span>Две встречные Ясны</span>
@@ -49,6 +49,36 @@
       <span>Веревки веры</span>
       <span>Археология итога</span>
     </div>
+  </section>
+
+  <section class="np-sim" aria-labelledby="np-sim-title" data-testid="simulator-mode">
+    <div class="np-sim-main">
+      <div class="np-sim-head">
+        <div>
+          <p class="np-section-kicker">Быстрый режим</p>
+          <h2 id="np-sim-title">Симулятор встречи</h2>
+        </div>
+        <div class="np-sim-scenes" id="np-sim-scenes" role="group" aria-label="Сценарии симулятора"></div>
+      </div>
+
+      <div class="np-sim-score" aria-label="Счёт симуляции">
+        <div><span>Резонанс</span><strong id="np-sim-resonance">0</strong></div>
+        <div><span>Доверие</span><strong id="np-sim-trust">0</strong></div>
+        <div><span>Напряжение</span><strong id="np-sim-tension">0</strong></div>
+      </div>
+
+      <article class="np-sim-card" id="np-sim-card" aria-live="polite"></article>
+
+      <div class="np-sim-actions">
+        <button class="ys-button np-mini-button" type="button" data-action="sim-restart">Начать заново</button>
+        <button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-next">Следующий ход</button>
+      </div>
+    </div>
+
+    <aside class="np-sim-side" aria-label="Ходы симуляции">
+      <div class="np-sim-track" id="np-sim-track"></div>
+      <div class="np-sim-log" id="np-sim-log"></div>
+    </aside>
   </section>
 
   <section class="np-guide" aria-labelledby="np-guide-title" data-testid="guide-mode">
@@ -258,6 +288,6 @@
 </script>
 <script src="../core/env.js?v=1"></script>
 <script src="../core/theme.js?v=1"></script>
-<script src="../negotiations.js?v=2"></script>
+<script src="../negotiations.js?v=3"></script>
 </body>
 </html>

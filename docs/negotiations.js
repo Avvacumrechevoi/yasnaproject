@@ -258,11 +258,135 @@
     }
   ];
 
+  var simScenes = [
+    {
+      id: 'hiring',
+      title: 'Найм кандидата',
+      preset: 'hiring',
+      startScores: { resonance: 52, trust: 54, tension: 42 },
+      turns: [
+        {
+          station: 1,
+          title: 'Вход',
+          bLine: 'У меня мало времени. Коротко: почему мне вообще стоит это обсуждать?',
+          hint: 'Проверьте "хочу / не хочу" без давления.',
+          choices: [
+            { text: 'Давайте за 10 минут проверим совпадение: что для вас будет хорошим проектом, а я покажу, где мы можем быть полезны.', label: 'Короткий честный вход', effect: { resonance: 10, trust: 8, tension: -6 }, note: 'Вы дали B контроль и не забрали его время.', lesson: 'Резонанс начинается с уважения входа.' },
+            { text: 'У нас сильный проект, такие возможности редко бывают. Надо просто попробовать.', label: 'Продавить интерес', effect: { resonance: -6, trust: -8, tension: 10 }, note: 'Звучит как давление и повышает защиту.', lesson: 'Если B еще не вошел, аргументы становятся шумом.' },
+            { text: 'Ну, можем как-нибудь потом созвониться, если будет удобно.', label: 'Размыть вход', effect: { resonance: -3, trust: -2, tension: 1 }, note: 'Вы избежали давления, но не создали ясного повода.', lesson: 'Мягкость без формы не открывает переговоры.' }
+          ]
+        },
+        {
+          station: 2,
+          title: 'Надежда B',
+          bLine: 'Для меня важны не только деньги. Я хочу понять, будет ли здесь рост и нормальная команда.',
+          hint: 'Услышьте надежду до предложения.',
+          choices: [
+            { text: 'Слышу две надежды: рост и среда. Давайте отдельно проверим задачи, людей и критерии успеха.', label: 'Отразить надежду', effect: { resonance: 12, trust: 10, tension: -4 }, note: 'B видит, что его не свели к цене.', lesson: 'Надежда становится мостом, когда ее называют.' },
+            { text: 'Деньги тоже будут нормальные, а рост приложится, если хорошо работать.', label: 'Сместить к деньгам', effect: { resonance: -4, trust: -5, tension: 5 }, note: 'Вы ответили не на главный слой.', lesson: 'Скрытый мотив нельзя закрыть чужим аргументом.' },
+            { text: 'У нас все растут, команда сильная, проблем обычно нет.', label: 'Общее обещание', effect: { resonance: 0, trust: -4, tension: 3 }, note: 'Слишком общо: веревка веры пока не держится.', lesson: 'Вера требует факта, а не красивого тумана.' }
+          ]
+        },
+        {
+          station: 3,
+          title: 'Позиция A',
+          bLine: 'Что конкретно вы от меня хотите в первые два месяца?',
+          hint: 'Откройте позицию A без тумана.',
+          choices: [
+            { text: 'Нам нужен человек, который возьмет участок, покажет первые результаты за 6 недель и честно обозначит, где система не работает.', label: 'Ясная позиция', effect: { resonance: 9, trust: 8, tension: -2 }, note: 'Позиция конкретна и не обещает легкости.', lesson: 'Открытие позиции снижает туман.' },
+            { text: 'Нам нужен сильный универсальный человек, который поможет везде, где потребуется.', label: 'Размытая роль', effect: { resonance: -5, trust: -6, tension: 7 }, note: 'B слышит риск хаоса.', lesson: 'Неясная роль увеличивает скрытую цену.' },
+            { text: 'Пока посмотрим по ситуации. Главное, чтобы был общий настрой.', label: 'Уйти от рамки', effect: { resonance: -7, trust: -7, tension: 6 }, note: 'Вы не ответили на вопрос о реальности.', lesson: 'Настрой не заменяет рамку ответственности.' }
+          ]
+        },
+        {
+          station: 6,
+          title: 'Ось 3-9',
+          bLine: 'Похоже, вы хотите много неопределенности, а я хочу понятные границы.',
+          hint: 'Назовите противоречие, не спорьте с ним.',
+          choices: [
+            { text: 'Да, это главное противоречие: нам нужна гибкость, вам нужны границы. Давайте найдем минимальные правила, которые удержат обе стороны.', label: 'Назвать противоречие', effect: { resonance: 10, trust: 9, tension: -8 }, note: 'Вы не прячете конфликт и переводите его в конструкцию.', lesson: '3-9 не надо побеждать, его надо увидеть.' },
+            { text: 'Без неопределенности стартапы не работают. Если нужны гарантии, возможно, это не ваш формат.', label: 'Жесткий отбор', effect: { resonance: -7, trust: -8, tension: 14 }, note: 'Иногда это честно, но сейчас звучит как срыв.', lesson: 'Резкость быстро переводит игру в десонанс.' },
+            { text: 'Нет, у нас все достаточно понятно, просто надо включиться.', label: 'Отрицать конфликт', effect: { resonance: -10, trust: -10, tension: 12 }, note: 'B назвал риск, а вы его отменили.', lesson: 'Непринятый риск возвращается позже.' }
+          ]
+        },
+        {
+          station: 7,
+          title: 'Веревка веры',
+          bLine: 'Как я пойму, что обещания про рост и адекватную команду не просто слова?',
+          hint: 'Свяжите надежду B с проверяемым действием.',
+          choices: [
+            { text: 'Дадим тестовую задачу и встречу с будущими коллегами. После нее вы сами оцените рост, стиль команды и риски.', label: 'Проверка веры', effect: { resonance: 12, trust: 12, tension: -6 }, note: 'Вы превращаете обещание в проверку.', lesson: 'Веревка веры держится на маленьком подтверждении.' },
+            { text: 'Можете мне поверить: я сам не люблю токсичные команды.', label: 'Просить поверить', effect: { resonance: 1, trust: -5, tension: 4 }, note: 'Личное обещание полезно, но без проверки слабое.', lesson: 'Вера без факта остается просьбой.' },
+            { text: 'Если сомневаетесь, давайте не будем тратить время.', label: 'Оборвать сомнение', effect: { resonance: -8, trust: -9, tension: 10 }, note: 'Сомнение B стало поводом для срыва.', lesson: 'Сомнение часто просит не давления, а проверки.' }
+          ]
+        },
+        {
+          station: 11,
+          title: 'Итог',
+          bLine: 'Хорошо. Что предлагаете как следующий шаг?',
+          hint: 'Завершите так, чтобы осталась хорошая история.',
+          choices: [
+            { text: 'Фиксируем короткую тестовую задачу, встречу с командой и дату решения. Если не совпадет, честно разойдемся без взаимных претензий.', label: 'Чистый итог', effect: { resonance: 8, trust: 10, tension: -7 }, note: 'Есть действие, срок и уважительный выход.', lesson: 'Хороший итог создает следующий цикл, а не осадок.' },
+            { text: 'Давайте скорее оформляться, детали решим по ходу.', label: 'Ускорить закрытие', effect: { resonance: -5, trust: -8, tension: 9 }, note: 'Слишком раннее закрытие ломает веру.', lesson: 'Итог должен выдерживать надежды, а не торопить их.' },
+            { text: 'Я напишу потом, когда будет время.', label: 'Размытый выход', effect: { resonance: -4, trust: -5, tension: 2 }, note: 'Контакт не разрушен, но энергия потеряна.', lesson: 'Без следующего шага результат быстро уходит в туман.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'sale',
+      title: 'Продажа без нажима',
+      preset: 'sale',
+      startScores: { resonance: 46, trust: 48, tension: 48 },
+      turns: [
+        {
+          station: 1,
+          title: 'Вход',
+          bLine: 'Мне уже много всего продавали. Чем это отличается?',
+          hint: 'Сначала снимите защиту внимания.',
+          choices: [
+            { text: 'Не буду продавать вслепую. За 5 минут проверим, есть ли у вас задача, которую мы реально можем решить.', label: 'Проверка вместо продажи', effect: { resonance: 10, trust: 9, tension: -8 }, note: 'Вы уважаете отказ и снижаете защиту.', lesson: 'Вход начинается с права не покупать.' },
+            { text: 'Отличается качеством и подходом, у нас правда сильное решение.', label: 'Сразу хвалить продукт', effect: { resonance: -3, trust: -5, tension: 5 }, note: 'B слышит привычный паттерн продажи.', lesson: 'До надежды B сильный продукт звучит как шум.' },
+            { text: 'Тогда просто посмотрите презентацию, там все понятно.', label: 'Передать презентацию', effect: { resonance: -5, trust: -4, tension: 2 }, note: 'Вы уходите от живого контакта.', lesson: 'Файл редко заменяет резонанс.' }
+          ]
+        },
+        {
+          station: 4,
+          title: 'Резонанс',
+          bLine: 'Главная боль - мы теряем время на согласованиях, но я не хочу внедрять еще одну сложную систему.',
+          hint: 'Найдите общий страх и общий результат.',
+          choices: [
+            { text: 'То есть цель - ускорить согласования без новой сложности. Тогда проверяем только этот критерий, не весь продукт.', label: 'Сузить к критерию', effect: { resonance: 12, trust: 8, tension: -5 }, note: 'Вы перевели разговор в измеримый результат.', lesson: 'Резонанс растет, когда B слышит свой критерий.' },
+            { text: 'Сложность только кажется, на самом деле система простая.', label: 'Спорить с страхом', effect: { resonance: -6, trust: -6, tension: 8 }, note: 'Вы спорите с опытом B.', lesson: 'Страх не исчезает от заверения.' },
+            { text: 'Давайте тогда пока не обсуждать внедрение.', label: 'Обойти риск', effect: { resonance: -2, trust: 0, tension: 1 }, note: 'Вы снизили давление, но не решили тревогу.', lesson: 'Обход риска не создает веру.' }
+          ]
+        },
+        {
+          station: 5,
+          title: 'Ограничения',
+          bLine: 'Бюджет ограничен. Я не готов платить за эксперимент.',
+          hint: 'Контр-вариант должен сохранять честный обмен.',
+          choices: [
+            { text: 'Тогда делаем маленький пилот с критерием успеха: если согласования не ускоряются, не масштабируем.', label: 'Пилот по результату', effect: { resonance: 10, trust: 10, tension: -6 }, note: 'Вы уважаете ограничение и снижаете риск.', lesson: 'Ограничение можно превратить в проверку.' },
+            { text: 'Если хотите качество, за него надо платить.', label: 'Давить ценой', effect: { resonance: -8, trust: -8, tension: 12 }, note: 'Это может быть правда, но сейчас звучит как столкновение.', lesson: 'Цена без надежды вызывает защиту.' },
+            { text: 'Можем дать большую скидку.', label: 'Сразу уступить', effect: { resonance: 1, trust: -4, tension: -2 }, note: 'Вы снизили цену, но могли снизить ценность.', lesson: 'Скидка не заменяет честный критерий.' }
+          ]
+        }
+      ]
+    }
+  ];
+
   var defaults = {
     preset: 'blank',
     activeStation: 0,
     activeDrill: 'hopes',
     activeGuideStep: 0,
+    activeSimScene: 'hiring',
+    activeSimTurn: 0,
+    simSelectedChoice: null,
+    simFinished: false,
+    simScores: { resonance: 52, trust: 54, tension: 42 },
+    simHistory: [],
     subject: '',
     partyA: '',
     partyB: '',
@@ -282,6 +406,7 @@
   };
 
   var state = loadState();
+  normalizeSimState();
   var drillAnswers = loadDrillAnswers();
   var els = {};
 
@@ -467,6 +592,166 @@
     return stations.find(function(station){ return station.id === Number(id); }) || stations[0];
   }
 
+  function simSceneById(id){
+    return simScenes.find(function(scene){ return scene.id === id; }) || simScenes[0];
+  }
+
+  function currentSimScene(){
+    return simSceneById(state.activeSimScene);
+  }
+
+  function currentSimTurn(){
+    var scene = currentSimScene();
+    return scene.turns[clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1)] || scene.turns[0];
+  }
+
+  function normalizeSimState(){
+    var scene = simSceneById(state.activeSimScene || defaults.activeSimScene);
+    state.activeSimScene = scene.id;
+    state.activeSimTurn = clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1);
+    state.simSelectedChoice = state.simSelectedChoice == null ? null : Number(state.simSelectedChoice);
+    state.simScores = Object.assign({}, scene.startScores, state.simScores || {});
+    state.simHistory = Array.isArray(state.simHistory) ? state.simHistory : [];
+    state.simFinished = !!state.simFinished;
+  }
+
+  function syncSimToDiagnostics(){
+    state.sharedGround = round(state.simScores.resonance);
+    state.bInterest = round(state.simScores.trust);
+    state.contradiction = round(state.simScores.tension);
+    state.hiddenRisk = round(avg([state.hiddenRisk, state.simScores.tension]));
+  }
+
+  function setSimScene(id){
+    var scene = simSceneById(id);
+    state.activeSimScene = scene.id;
+    state.activeSimTurn = 0;
+    state.simSelectedChoice = null;
+    state.simFinished = false;
+    state.simScores = Object.assign({}, scene.startScores);
+    state.simHistory = [];
+    var linked = presets.find(function(preset){ return preset.id === scene.preset; });
+    if(linked) state = Object.assign({}, state, linked.values, { preset: linked.id });
+    state.activeStation = scene.turns[0].station;
+    syncSimToDiagnostics();
+    render();
+    showToast('Сцена выбрана');
+  }
+
+  function selectSimChoice(index){
+    var turn = currentSimTurn();
+    var choice = turn.choices[Number(index)];
+    if(!choice || state.simFinished) return;
+    state.simSelectedChoice = Number(index);
+    state.simScores = {
+      resonance: round(Number(state.simScores.resonance) + Number(choice.effect.resonance || 0)),
+      trust: round(Number(state.simScores.trust) + Number(choice.effect.trust || 0)),
+      tension: round(Number(state.simScores.tension) + Number(choice.effect.tension || 0))
+    };
+    state.activeStation = turn.station;
+    state.simHistory[state.activeSimTurn] = {
+      turn: turn.title,
+      choice: choice.label,
+      note: choice.note,
+      scores: Object.assign({}, state.simScores)
+    };
+    syncSimToDiagnostics();
+    render();
+  }
+
+  function nextSimTurn(){
+    var scene = currentSimScene();
+    if(state.simSelectedChoice == null && !state.simFinished) {
+      showToast('Сначала выберите ответ');
+      return;
+    }
+    if(Number(state.activeSimTurn) >= scene.turns.length - 1) {
+      state.simFinished = true;
+      render();
+      return;
+    }
+    state.activeSimTurn = Number(state.activeSimTurn) + 1;
+    state.simSelectedChoice = null;
+    state.activeStation = currentSimTurn().station;
+    render();
+  }
+
+  function restartSim(){
+    setSimScene(state.activeSimScene);
+    showToast('Симуляция начата заново');
+  }
+
+  function renderSim(){
+    if(!els.simCard) return;
+    normalizeSimState();
+    var scene = currentSimScene();
+    var turn = currentSimTurn();
+    var selected = state.simSelectedChoice == null ? null : turn.choices[state.simSelectedChoice];
+    var finalText = finalSimText();
+
+    els.simScenes.innerHTML = simScenes.map(function(sceneItem){
+      return '<button class="np-sim-scene" type="button" data-sim-scene="' + sceneItem.id + '" aria-pressed="' + (sceneItem.id === scene.id ? 'true' : 'false') + '">' + esc(sceneItem.title) + '</button>';
+    }).join('');
+    els.simResonance.textContent = String(round(state.simScores.resonance));
+    els.simTrust.textContent = String(round(state.simScores.trust));
+    els.simTension.textContent = String(round(state.simScores.tension));
+
+    if(state.simFinished) {
+      els.simCard.innerHTML =
+        '<div class="np-sim-meta"><span>Финал</span><span>' + esc(scene.title) + '</span><span>Фаза 11: Итог</span></div>' +
+        '<div class="np-sim-dialog"><span class="np-sim-person">Разбор</span><p class="np-sim-line">' + esc(finalText.title) + '</p><p class="np-sim-hint">' + esc(finalText.body) + '</p></div>' +
+        '<div class="np-sim-feedback"><strong>Следующая тренировка</strong><p>' + esc(finalText.next) + '</p></div>';
+    } else {
+      els.simCard.innerHTML =
+        '<div class="np-sim-meta"><span>Ход ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>' + esc(turn.title) + '</span></div>' +
+        '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(turn.bLine) + '</p><p class="np-sim-hint">' + esc(turn.hint) + '</p></div>' +
+        '<div class="np-sim-choices">' + turn.choices.map(function(choice, index){
+          return '<button class="np-sim-choice' + (Number(state.simSelectedChoice) === index ? ' is-selected' : '') + '" type="button" data-sim-choice="' + index + '">' +
+            '<strong>' + esc(choice.label) + '</strong><span>' + esc(choice.text) + '</span></button>';
+        }).join('') + '</div>' +
+        (selected ? '<div class="np-sim-feedback"><strong>' + esc(selected.note) + '</strong><p>' + esc(selected.lesson) + '</p></div>' : '');
+    }
+
+    els.simTrack.innerHTML = scene.turns.map(function(item, index){
+      var done = index < Number(state.activeSimTurn) || (index === Number(state.activeSimTurn) && state.simSelectedChoice != null) || state.simFinished;
+      var current = index === Number(state.activeSimTurn) && !state.simFinished;
+      return '<div class="np-sim-turn' + (done ? ' is-done' : '') + (current ? ' is-current' : '') + '">' +
+        '<span class="np-sim-turn-num">' + (index + 1) + '</span>' +
+        '<span><strong>' + esc(item.title) + '</strong><span>Фаза ' + item.station + '</span></span>' +
+        '<span class="np-sim-turn-state">' + (done ? 'OK' : '...') + '</span>' +
+      '</div>';
+    }).join('');
+
+    els.simLog.innerHTML = '<h3>Журнал ходов</h3>' + (state.simHistory.length
+      ? '<ul>' + state.simHistory.map(function(item){ return '<li><strong>' + esc(item.turn) + ':</strong> ' + esc(item.choice) + '</li>'; }).join('') + '</ul>'
+      : '<p>Выберите первый ответ. После каждого хода здесь появится короткая история решений.</p>');
+  }
+
+  function finalSimText(){
+    var resonance = Number(state.simScores.resonance);
+    var trust = Number(state.simScores.trust);
+    var tension = Number(state.simScores.tension);
+    if(resonance >= 70 && trust >= 70 && tension <= 45) {
+      return {
+        title: 'Получились полноценные переговоры',
+        body: 'Вы удержали интерес B, проверили надежды и вышли к следующему шагу без давления.',
+        next: 'Теперь можно перейти ниже к карте 12 фаз и разобрать, где именно возник резонанс.'
+      };
+    }
+    if(tension >= 68) {
+      return {
+        title: 'Переговоры ушли в десонанс',
+        body: 'Напряжение стало сильнее доверия. Вернитесь к входу, надеждам B и честному обмену.',
+        next: 'Повторите сцену и попробуйте ответы, где сначала признается риск B.'
+      };
+    }
+    return {
+      title: 'Есть контакт, но веревка веры еще слабая',
+      body: 'Стороны слышат друг друга частично. Нужна проверка обещаний и более ясный следующий шаг.',
+      next: 'Пройдите ход заново и выбирайте ответы, где обещание превращается в проверяемое действие.'
+    };
+  }
+
   function isFieldComplete(field){
     if(['bInterest', 'sharedGround', 'contradiction', 'fairness', 'atmosphere', 'hiddenRisk'].includes(field)) {
       return Number(state[field]) > 0;
@@ -643,6 +928,7 @@
   function render(){
     var m = metrics();
     renderInputs();
+    renderSim();
     renderGuide();
     renderPresets();
     renderStationGrid(m);
@@ -771,6 +1057,18 @@
         return;
       }
 
+      var simScene = event.target.closest('[data-sim-scene]');
+      if(simScene) {
+        setSimScene(simScene.getAttribute('data-sim-scene'));
+        return;
+      }
+
+      var simChoice = event.target.closest('[data-sim-choice]');
+      if(simChoice) {
+        selectSimChoice(simChoice.getAttribute('data-sim-choice'));
+        return;
+      }
+
       var station = event.target.closest('[data-station]');
       if(station) {
         setStation(station.getAttribute('data-station'));
@@ -796,6 +1094,8 @@
       if(name === 'reset') resetAll();
       if(name === 'focus-recommended') focusRecommended();
       if(name === 'copy-brief') copyBrief();
+      if(name === 'sim-restart') restartSim();
+      if(name === 'sim-next') nextSimTurn();
       if(name === 'guide-prev') setGuideStep(Number(state.activeGuideStep) - 1, { scroll: true });
       if(name === 'guide-next') setGuideStep(Number(state.activeGuideStep) + 1, { scroll: true });
       if(name === 'guide-focus') focusGuideFields();
@@ -823,6 +1123,13 @@
     els.readiness = document.getElementById('np-readiness');
     els.resonance = document.getElementById('np-resonance');
     els.desonance = document.getElementById('np-desonance');
+    els.simScenes = document.getElementById('np-sim-scenes');
+    els.simCard = document.getElementById('np-sim-card');
+    els.simResonance = document.getElementById('np-sim-resonance');
+    els.simTrust = document.getElementById('np-sim-trust');
+    els.simTension = document.getElementById('np-sim-tension');
+    els.simTrack = document.getElementById('np-sim-track');
+    els.simLog = document.getElementById('np-sim-log');
     els.guideCard = document.getElementById('np-guide-card');
     els.guideRail = document.getElementById('np-guide-rail');
     els.guideProgressLabel = document.getElementById('np-guide-progress-label');
@@ -837,10 +1144,14 @@
       project: 'yasnaproject',
       version: '1.0.0',
       stations: stations,
+      simScenes: simScenes.map(function(scene){ return { id: scene.id, title: scene.title, turns: scene.turns.length }; }),
       guideSteps: guideSteps.map(function(step){ return { id: step.id, title: step.title, station: step.station }; }),
       presets: presets.map(function(preset){ return { id: preset.id, title: preset.title }; }),
       getState: function(){ return Object.assign({}, state); },
       analyze: metrics,
+      setSimScene: setSimScene,
+      selectSimChoice: selectSimChoice,
+      nextSimTurn: nextSimTurn,
       guideProgress: guideProgress,
       setGuideStep: setGuideStep,
       applyPreset: applyPreset,
