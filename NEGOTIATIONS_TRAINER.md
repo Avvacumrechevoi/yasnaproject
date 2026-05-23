@@ -41,6 +41,24 @@ The trainer at `docs/negotiations.html` has six working layers:
 - diagnostics: readiness, resonance, desonance risk, fairness, hidden risk, contradiction;
 - exercises: hopes questions, 3-9 contradiction, ropes of faith, exit without residue.
 
+## Content Logic Audit
+
+The latest UX/content pass tightens the lesson logic around one repeatable chain:
+
+- situation: what is really happening between A and B right now;
+- thinking focus: what the learner must notice before answering;
+- practice: three possible A moves with different consequences;
+- debrief: why the selected move helped or hurt trust;
+- next step: continue the lesson or open the detailed preparation map.
+
+Key text decisions:
+
+- start with everyday labels (`Начать разговор`, `Понять ожидание`, `Доказать обещание`) before introducing Yasna terms;
+- keep the learner-facing language human: `вы`, `собеседник`, `ожидание`, `проверка`, `следующий шаг` instead of exposed `A/B` notation;
+- avoid persuasion framing and keep the method ethical: every strong move gives the other side more clarity and a clean way to stop;
+- make each lesson train one observable skill, not a broad negotiation theory block;
+- keep the detailed 12-phase map behind the first completed move so the first screen stays learnable.
+
 ## Safety Boundary
 
 The trainer deliberately frames negotiation as ethical resonance:

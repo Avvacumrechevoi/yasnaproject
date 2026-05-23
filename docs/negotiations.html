@@ -19,7 +19,7 @@
 <meta name="yasna:tg-bot" content=""/>
 <meta name="yasna:theme" content="light"/>
 <link rel="stylesheet" href="design-system.css?v=2"/>
-<link rel="stylesheet" href="negotiations.css?v=10"/>
+<link rel="stylesheet" href="negotiations.css?v=12"/>
 </head>
 <body class="np-page">
 <header class="np-topbar">
@@ -41,7 +41,7 @@
     <div>
       <p class="np-kicker">Тренажер мышления</p>
       <h1 id="np-title">Тренажер переговоров</h1>
-      <p class="np-lead">Один навык за раз: короткое объяснение, выбор ответа и понятный разбор. Следующий шаг появится после вашего действия.</p>
+      <p class="np-lead">Тренируем первый ход: как спокойно войти в разговор, услышать интерес собеседника и не давить.</p>
     </div>
   </section>
 
@@ -51,7 +51,7 @@
         <p class="np-section-kicker">Прогресс</p>
         <h2 id="np-flow-title">Урок 1 из 6</h2>
       </div>
-      <p id="np-flow-hint">Сначала поймите правило. Затем нажмите кнопку и попробуйте выбрать ход.</p>
+      <p id="np-flow-hint">Сегодня собираем короткий вход в разговор: ясно, спокойно и без давления.</p>
     </div>
     <div class="np-flow-progress" aria-label="Общий прогресс курса">
       <span id="np-flow-progress-label">Прогресс: 0 из 6 уроков</span>
@@ -148,29 +148,29 @@
 
         <div class="np-two-cols">
           <label class="np-field">
-            <span>Сторона A</span>
+            <span>Вы / ваша сторона</span>
             <input data-field="partyA" type="text" placeholder="Мы / я / команда"/>
           </label>
           <label class="np-field">
-            <span>Сторона B</span>
+            <span>Собеседник</span>
             <input data-field="partyB" type="text" placeholder="Контрагент / кандидат / руководитель"/>
           </label>
         </div>
 
         <label class="np-field">
-          <span>A хочет взять</span>
-          <textarea data-field="aTake" rows="2" placeholder="Что A хочет получить явно?"></textarea>
+          <span>Что вам нужно</span>
+          <textarea data-field="aTake" rows="2" placeholder="Что вы хотите получить явно?"></textarea>
         </label>
         <label class="np-field">
-          <span>A готов дать</span>
-          <textarea data-field="aGive" rows="2" placeholder="Что A реально может дать B?"></textarea>
+          <span>Что вы готовы дать</span>
+          <textarea data-field="aGive" rows="2" placeholder="Что вы реально можете дать собеседнику?"></textarea>
         </label>
         <label class="np-field">
-          <span>B хочет взять</span>
-          <textarea data-field="bTake" rows="2" placeholder="Какая надежда, выгода, статус или удовольствие у B?"></textarea>
+          <span>Что нужно собеседнику</span>
+          <textarea data-field="bTake" rows="2" placeholder="Какая надежда, выгода, статус или спокойствие важны собеседнику?"></textarea>
         </label>
         <label class="np-field">
-          <span>B должен поверить</span>
+          <span>Во что он должен поверить</span>
           <textarea data-field="bVisible" rows="2" placeholder="Какая веревка веры должна выдержать?"></textarea>
         </label>
         <label class="np-field">
@@ -220,8 +220,8 @@
         </svg>
         <div class="np-axis np-axis-top">Будущие надежды</div>
         <div class="np-axis np-axis-bottom">Прошлая история</div>
-        <div class="np-axis np-axis-left">Отражение A</div>
-        <div class="np-axis np-axis-right">Тень B</div>
+        <div class="np-axis np-axis-left">Ваша сторона</div>
+        <div class="np-axis np-axis-right">Скрытый слой собеседника</div>
       </div>
 
       <div class="np-station-grid" id="np-station-grid" role="list" aria-label="Фазы переговоров"></div>
@@ -247,7 +247,7 @@
 
       <div class="np-slider-pack" aria-label="Настройки диагностики">
         <label class="np-slider">
-          <span>Интерес B</span>
+          <span>Интерес собеседника</span>
           <input data-field="bInterest" type="range" min="0" max="100" step="1"/>
           <output data-output="bInterest">0</output>
         </label>
@@ -285,7 +285,7 @@
 
       <section class="np-guard">
         <h3>Граница тренажера</h3>
-        <p>Цель - не продавить B, а найти полноценные переговоры: реальную надежду, честный обмен и выход без разрушительного осадка.</p>
+        <p>Цель - не продавить собеседника, а найти полноценные переговоры: реальную надежду, честный обмен и выход без разрушительного осадка.</p>
       </section>
     </aside>
   </section>
@@ -311,6 +311,6 @@
 </script>
 <script src="core/env.js?v=1"></script>
 <script src="core/theme.js?v=1"></script>
-<script src="negotiations.js?v=10"></script>
+<script src="negotiations.js?v=12"></script>
 </body>
 </html>

@@ -531,6 +531,63 @@
   font-size: var(--ys-text-sm);
 }
 
+.np-thinking-map--route {
+  min-height: auto;
+  display: block;
+  padding: var(--ys-space-4);
+  overflow: visible;
+}
+
+.np-thinking-map--route::before,
+.np-thinking-map--route::after {
+  display: none;
+}
+
+.np-lesson-route {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ys-space-3);
+}
+
+.np-lesson-route div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: var(--ys-space-1) var(--ys-space-3);
+  align-items: center;
+  padding: var(--ys-space-3);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-lesson-route span {
+  grid-row: span 2;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ys-color-accent);
+  color: #fff;
+  font-size: var(--ys-text-xs);
+  font-weight: 850;
+}
+
+.np-lesson-route strong {
+  color: var(--ys-color-text);
+  font-size: var(--ys-text-sm);
+  line-height: 1.2;
+}
+
+.np-lesson-route p {
+  margin: 0;
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+  line-height: 1.35;
+}
+
 .np-course-progress {
   display: grid;
   grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
@@ -2170,6 +2227,27 @@ html[data-yasna-theme='dark'] .np-compass-metric {
   margin-top: 4px;
   color: var(--ys-color-text-muted);
   font-size: var(--ys-text-md);
+}
+
+.np-situation-card {
+  display: grid;
+  gap: var(--ys-space-2);
+  max-width: 780px;
+  padding: var(--ys-space-4) 0;
+  border-top: 1px solid var(--ys-color-border-soft);
+  border-bottom: 1px solid var(--ys-color-border-soft);
+}
+
+.np-situation-card span {
+  color: var(--ys-color-accent-hover);
+  font-size: var(--ys-text-xs);
+  font-weight: 850;
+}
+
+.np-situation-card p {
+  margin: 0;
+  color: var(--ys-color-text);
+  font-size: var(--ys-text-lg);
 }
 
 .np-learning-card h3 {
