@@ -167,10 +167,102 @@
     }
   ];
 
+  var guideSteps = [
+    {
+      id: 'frame',
+      title: 'Кто, зачем и о чем',
+      station: 0,
+      fields: ['subject', 'partyA', 'partyB'],
+      goal: 'Собрать рамку встречи до любых аргументов.',
+      exercise: 'Опишите предмет переговоров, сторону A и сторону B так, чтобы это понял внешний наблюдатель.',
+      check: 'Можно ли одним предложением сказать, что должно измениться после встречи?',
+      focus: 'subject',
+      fill: ['Предмет переговоров', 'Сторона A', 'Сторона B']
+    },
+    {
+      id: 'history',
+      title: 'Информационное поле',
+      station: 0,
+      fields: ['bHidden', 'fairExit'],
+      goal: 'Увидеть прошлый опыт, осадок, репутацию и возможную тень.',
+      exercise: 'Запишите, что B уже знает, чего опасается и какой след нельзя оставить.',
+      check: 'Есть ли в подготовке место для прошлой истории, а не только для будущей сделки?',
+      focus: 'bHidden',
+      fill: ['Тень / скрытый слой', 'История после встречи']
+    },
+    {
+      id: 'entry',
+      title: 'Вход: хочу / не хочу',
+      station: 1,
+      fields: ['bInterest', 'placeTime'],
+      goal: 'Проверить, есть ли у B настоящий вход в разговор.',
+      exercise: 'Оцените интерес B и задайте формат, где отказ допустим без потери лица.',
+      check: 'Если B не хочет разговора, сможете ли вы остановиться без давления?',
+      focus: 'placeTime',
+      fill: ['Интерес B', 'Место, время, атмосфера']
+    },
+    {
+      id: 'hopes',
+      title: 'Надежды и обмен',
+      station: 3,
+      fields: ['aTake', 'aGive', 'bTake', 'bVisible'],
+      goal: 'Развести взять/дать и связать предложение A с надеждой B.',
+      exercise: 'Заполните, что A хочет взять, что реально дает, что B хочет взять и чему должен поверить.',
+      check: 'Видно ли, почему B должен считать обмен честным?',
+      focus: 'aTake',
+      fill: ['A хочет взять', 'A готов дать', 'B хочет взять', 'B должен поверить']
+    },
+    {
+      id: 'resonance',
+      title: 'Резонанс и атмосфера',
+      station: 4,
+      fields: ['sharedGround', 'atmosphere'],
+      goal: 'Найти общий словарь, место, темп и своевременность.',
+      exercise: 'Оцените общую зону и атмосферу, затем уберите один фактор, который мешает слышать друг друга.',
+      check: 'Есть ли хоть одна общая ценность или общий опыт, с которого можно начать?',
+      focus: 'placeTime',
+      fill: ['Общая зона', 'Атмосфера']
+    },
+    {
+      id: 'contradiction',
+      title: 'Ось 3-9',
+      station: 6,
+      fields: ['contradiction', 'bHidden'],
+      goal: 'Назвать главное противоречие без унижения и борьбы за правоту.',
+      exercise: 'Сформулируйте: A хочет одно, B хочет другое, а честная точка игры находится здесь.',
+      check: 'Отделено ли предметное противоречие от статусного?',
+      focus: 'bHidden',
+      fill: ['Противоречие 3-9', 'Тень / скрытый слой']
+    },
+    {
+      id: 'faith',
+      title: 'Веревки веры',
+      station: 7,
+      fields: ['bVisible', 'fairness'],
+      goal: 'Проверить, выдержит ли надежда B реальные возможности A.',
+      exercise: 'Уберите лишние обещания и оставьте только то, что можно подтвердить действием.',
+      check: 'Есть ли маленькая проверка, которая докажет, что вера не фантазия?',
+      focus: 'bVisible',
+      fill: ['B должен поверить', 'Честный обмен']
+    },
+    {
+      id: 'exit',
+      title: 'Итог и история',
+      station: 11,
+      fields: ['fairExit'],
+      goal: 'Подготовить успех, отказ или перенос так, чтобы следующий цикл оставался возможным.',
+      exercise: 'Напишите финальную фразу для хорошего итога и отдельную фразу для корректного отказа.',
+      check: 'Что останется в памяти B через неделю?',
+      focus: 'fairExit',
+      fill: ['История после встречи']
+    }
+  ];
+
   var defaults = {
     preset: 'blank',
     activeStation: 0,
     activeDrill: 'hopes',
+    activeGuideStep: 0,
     subject: '',
     partyA: '',
     partyB: '',
@@ -375,6 +467,72 @@
     return stations.find(function(station){ return station.id === Number(id); }) || stations[0];
   }
 
+  function isFieldComplete(field){
+    if(['bInterest', 'sharedGround', 'contradiction', 'fairness', 'atmosphere', 'hiddenRisk'].includes(field)) {
+      return Number(state[field]) > 0;
+    }
+    return clean(state[field]).length >= 12;
+  }
+
+  function guideCompletion(step){
+    var done = step.fields.filter(isFieldComplete).length;
+    return {
+      done: done,
+      total: step.fields.length,
+      complete: done === step.fields.length,
+      percent: step.fields.length ? Math.round(done / step.fields.length * 100) : 0
+    };
+  }
+
+  function guideProgress(){
+    var complete = guideSteps.filter(function(step){
+      return guideCompletion(step).complete;
+    }).length;
+    return {
+      complete: complete,
+      total: guideSteps.length,
+      percent: Math.round(complete / guideSteps.length * 100)
+    };
+  }
+
+  function activeGuideStep(){
+    return guideSteps[clamp(Number(state.activeGuideStep || 0), 0, guideSteps.length - 1)] || guideSteps[0];
+  }
+
+  function renderGuide(){
+    if(!els.guideCard || !els.guideRail) return;
+    var step = activeGuideStep();
+    var stepState = guideCompletion(step);
+    var progress = guideProgress();
+    var station = stationById(step.station);
+    els.guideProgressLabel.textContent = progress.complete + ' из ' + progress.total;
+    els.guideProgressFill.style.width = progress.percent + '%';
+    els.guideCard.innerHTML =
+      '<div class="np-guide-meta">' +
+        '<span>Шаг ' + (Number(state.activeGuideStep) + 1) + ' из ' + guideSteps.length + '</span>' +
+        '<span>Фаза ' + station.id + ': ' + esc(station.short) + '</span>' +
+        '<span>' + stepState.done + ' / ' + stepState.total + ' заполнено</span>' +
+      '</div>' +
+      '<h3>' + esc(step.title) + '</h3>' +
+      '<p>' + esc(step.goal) + '</p>' +
+      '<div class="np-guide-grid">' +
+        '<div class="np-guide-block"><strong>Задание</strong><ul><li>' + esc(step.exercise) + '</li></ul></div>' +
+        '<div class="np-guide-block"><strong>Заполнить</strong><ul>' + step.fill.map(function(item){ return '<li>' + esc(item) + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="np-guide-block"><strong>Проверка</strong><ul><li>' + esc(step.check) + '</li></ul></div>' +
+      '</div>' +
+      '<div class="np-guide-status' + (stepState.complete ? ' is-complete' : '') + '">' + (stepState.complete ? 'Шаг готов' : 'Шаг требует заполнения') + '</div>';
+
+    els.guideRail.innerHTML = guideSteps.map(function(item, index){
+      var itemState = guideCompletion(item);
+      var selected = index === Number(state.activeGuideStep);
+      return '<button class="np-guide-step' + (itemState.complete ? ' is-complete' : '') + '" type="button" role="tab" data-guide-step="' + index + '" aria-selected="' + (selected ? 'true' : 'false') + '">' +
+        '<span class="np-guide-step-num">' + (index + 1) + '</span>' +
+        '<span class="np-guide-step-copy"><strong>' + esc(item.title) + '</strong><span>Фаза ' + item.station + '</span></span>' +
+        '<span class="np-guide-step-state">' + (itemState.complete ? 'OK' : itemState.done + '/' + itemState.total) + '</span>' +
+      '</button>';
+    }).join('');
+  }
+
   function renderPresets(){
     els.presets.innerHTML = presets.map(function(preset){
       return '<button class="np-preset" type="button" data-preset="' + preset.id + '" aria-pressed="' + (state.preset === preset.id ? 'true' : 'false') + '">' +
@@ -485,6 +643,7 @@
   function render(){
     var m = metrics();
     renderInputs();
+    renderGuide();
     renderPresets();
     renderStationGrid(m);
     renderCompass(m);
@@ -504,6 +663,27 @@
   function setStation(id){
     state.activeStation = Number(id);
     state.preset = state.preset || 'blank';
+    render();
+  }
+
+  function setGuideStep(index, options){
+    var next = clamp(Number(index), 0, guideSteps.length - 1);
+    state.activeGuideStep = next;
+    state.activeStation = guideSteps[next].station;
+    render();
+    if(options && options.scroll) {
+      document.querySelector('.np-guide')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function focusGuideFields(){
+    var step = activeGuideStep();
+    var target = document.querySelector('[data-field="' + step.focus + '"]');
+    if(target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.setTimeout(function(){ target.focus(); }, 250);
+    }
+    state.activeStation = step.station;
     render();
   }
 
@@ -604,12 +784,21 @@
         return;
       }
 
+      var guideStep = event.target.closest('[data-guide-step]');
+      if(guideStep) {
+        setGuideStep(guideStep.getAttribute('data-guide-step'), { scroll: true });
+        return;
+      }
+
       var action = event.target.closest('[data-action]');
       if(!action) return;
       var name = action.getAttribute('data-action');
       if(name === 'reset') resetAll();
       if(name === 'focus-recommended') focusRecommended();
       if(name === 'copy-brief') copyBrief();
+      if(name === 'guide-prev') setGuideStep(Number(state.activeGuideStep) - 1, { scroll: true });
+      if(name === 'guide-next') setGuideStep(Number(state.activeGuideStep) + 1, { scroll: true });
+      if(name === 'guide-focus') focusGuideFields();
     });
 
     document.addEventListener('keydown', function(event){
@@ -634,6 +823,10 @@
     els.readiness = document.getElementById('np-readiness');
     els.resonance = document.getElementById('np-resonance');
     els.desonance = document.getElementById('np-desonance');
+    els.guideCard = document.getElementById('np-guide-card');
+    els.guideRail = document.getElementById('np-guide-rail');
+    els.guideProgressLabel = document.getElementById('np-guide-progress-label');
+    els.guideProgressFill = document.getElementById('np-guide-progress-fill');
     els.drillTabs = document.getElementById('np-drill-tabs');
     els.drillBody = document.getElementById('np-drill-body');
     els.toast = document.getElementById('np-toast');
@@ -644,9 +837,12 @@
       project: 'yasnaproject',
       version: '1.0.0',
       stations: stations,
+      guideSteps: guideSteps.map(function(step){ return { id: step.id, title: step.title, station: step.station }; }),
       presets: presets.map(function(preset){ return { id: preset.id, title: preset.title }; }),
       getState: function(){ return Object.assign({}, state); },
       analyze: metrics,
+      guideProgress: guideProgress,
+      setGuideStep: setGuideStep,
       applyPreset: applyPreset,
       buildBrief: buildBrief
     };

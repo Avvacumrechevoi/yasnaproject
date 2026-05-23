@@ -19,7 +19,7 @@
 <meta name="yasna:tg-bot" content=""/>
 <meta name="yasna:theme" content="light"/>
 <link rel="stylesheet" href="design-system.css?v=1"/>
-<link rel="stylesheet" href="negotiations.css?v=1"/>
+<link rel="stylesheet" href="negotiations.css?v=2"/>
 </head>
 <body class="np-page">
 <header class="np-topbar">
@@ -49,6 +49,30 @@
       <span>Веревки веры</span>
       <span>Археология итога</span>
     </div>
+  </section>
+
+  <section class="np-guide" aria-labelledby="np-guide-title" data-testid="guide-mode">
+    <div class="np-guide-main">
+      <div class="np-guide-head">
+        <div>
+          <p class="np-section-kicker">Пошаговый режим</p>
+          <h2 id="np-guide-title">Гид подготовки переговоров</h2>
+        </div>
+        <div class="np-guide-progress" aria-label="Прогресс прохождения">
+          <span id="np-guide-progress-label">0 из 8</span>
+          <div class="np-guide-progress-track">
+            <div class="np-guide-progress-fill" id="np-guide-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+      <article class="np-guide-card" id="np-guide-card" aria-live="polite"></article>
+      <div class="np-guide-actions">
+        <button class="ys-button np-mini-button" type="button" data-action="guide-prev">Назад</button>
+        <button class="ys-button np-mini-button" type="button" data-action="guide-focus">Заполнить поля</button>
+        <button class="ys-button ys-button--primary np-mini-button" type="button" data-action="guide-next">Дальше</button>
+      </div>
+    </div>
+    <div class="np-guide-rail" id="np-guide-rail" role="tablist" aria-label="Шаги подготовки переговоров"></div>
   </section>
 
   <section class="np-workbench" aria-label="Рабочее поле тренажера">
@@ -234,6 +258,6 @@
 </script>
 <script src="core/env.js?v=1"></script>
 <script src="core/theme.js?v=1"></script>
-<script src="negotiations.js?v=1"></script>
+<script src="negotiations.js?v=2"></script>
 </body>
 </html>

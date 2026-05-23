@@ -186,6 +186,7 @@
 
 .np-panel,
 .np-map-panel,
+.np-guide,
 .np-drills,
 .np-phase-card {
   border: 1px solid var(--ys-color-border-soft);
@@ -231,6 +232,226 @@
   padding-inline: var(--ys-space-4);
   font-size: var(--ys-text-sm);
   white-space: nowrap;
+}
+
+.np-guide {
+  scroll-margin-top: 74px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: var(--ys-space-5);
+  margin-bottom: var(--ys-space-5);
+  padding: var(--ys-space-5);
+}
+
+.np-guide-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--ys-space-5);
+  margin-bottom: var(--ys-space-5);
+}
+
+.np-guide h2 {
+  margin: 0;
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: var(--ys-text-xl);
+  line-height: var(--ys-line-tight);
+}
+
+.np-guide-progress {
+  min-width: 190px;
+  display: grid;
+  gap: var(--ys-space-2);
+}
+
+.np-guide-progress span {
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+  font-weight: 750;
+  text-align: right;
+}
+
+.np-guide-progress-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-guide-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ys-color-accent);
+  transition: width .18s ease;
+}
+
+.np-guide-card {
+  min-height: 250px;
+  display: grid;
+  gap: var(--ys-space-4);
+  padding: var(--ys-space-5);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface);
+}
+
+.np-guide-card h3 {
+  margin: 0;
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: 24px;
+  line-height: var(--ys-line-tight);
+}
+
+.np-guide-card p {
+  margin: 0;
+  color: var(--ys-color-text-muted);
+}
+
+.np-guide-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ys-space-3);
+}
+
+.np-guide-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-surface-muted);
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+  font-weight: 750;
+}
+
+.np-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ys-space-4);
+}
+
+.np-guide-block {
+  min-width: 0;
+  padding: var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-guide-block strong {
+  display: block;
+  margin-bottom: var(--ys-space-3);
+  color: var(--ys-color-text);
+  font-size: var(--ys-text-sm);
+}
+
+.np-guide-block ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ys-color-text-muted);
+}
+
+.np-guide-block li {
+  margin: var(--ys-space-2) 0;
+}
+
+.np-guide-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 30px;
+  padding: 0 var(--ys-space-4);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-warning);
+  color: #1d1d1f;
+  font-size: var(--ys-text-xs);
+  font-weight: 800;
+}
+
+.np-guide-status.is-complete {
+  background: var(--ys-color-success);
+  color: #fff;
+}
+
+.np-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ys-space-3);
+  margin-top: var(--ys-space-5);
+}
+
+.np-guide-rail {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ys-space-3);
+  align-content: start;
+}
+
+.np-guide-step {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: var(--ys-space-3);
+  align-items: center;
+  min-height: 58px;
+  padding: var(--ys-space-3);
+  border: 1px solid var(--ys-color-border);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface);
+  color: var(--ys-color-text);
+  text-align: left;
+}
+
+.np-guide-step-num {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ys-color-surface-muted);
+  color: var(--ys-color-text-muted);
+  font-weight: 800;
+}
+
+.np-guide-step-copy strong,
+.np-guide-step-copy span {
+  display: block;
+}
+
+.np-guide-step-copy strong {
+  font-size: var(--ys-text-sm);
+  line-height: 1.2;
+}
+
+.np-guide-step-copy span {
+  margin-top: 2px;
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+}
+
+.np-guide-step-state {
+  color: var(--ys-color-text-subtle);
+  font-size: var(--ys-text-xs);
+  font-weight: 800;
+}
+
+.np-guide-step[aria-selected='true'] {
+  border-color: var(--ys-color-accent);
+  background: var(--ys-color-accent-soft);
+}
+
+.np-guide-step.is-complete .np-guide-step-num {
+  background: var(--ys-color-success);
+  color: #fff;
+}
+
+.np-guide-step.is-complete .np-guide-step-state {
+  color: var(--ys-color-success);
 }
 
 .np-presets {
@@ -742,8 +963,17 @@ html[data-yasna-theme='dark'] .np-compass-metric {
   }
 
   .np-workbench,
+  .np-guide,
   .np-drill-body {
     grid-template-columns: 1fr;
+  }
+
+  .np-guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .np-guide-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .np-scenario-panel {
@@ -779,6 +1009,26 @@ html[data-yasna-theme='dark'] .np-compass-metric {
   .np-score-strip,
   .np-slider-pack,
   .np-two-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .np-guide {
+    padding: var(--ys-space-4);
+  }
+
+  .np-guide-head {
+    display: grid;
+  }
+
+  .np-guide-progress {
+    min-width: 0;
+  }
+
+  .np-guide-progress span {
+    text-align: left;
+  }
+
+  .np-guide-rail {
     grid-template-columns: 1fr;
   }
 

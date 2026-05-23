@@ -32,6 +32,7 @@ The implemented option is the interactive constructor. It keeps the backend in q
 
 The trainer at `docs/negotiations.html` has four working layers:
 
+- step-by-step guide: an eight-step preparation flow tied to the Yasna phases;
 - scenario setup: parties, subject, give/take, hidden layer, atmosphere, exit history;
 - 12-phase Yasna map: information field through final result, with recommended phase;
 - diagnostics: readiness, resonance, desonance risk, fairness, hidden risk, contradiction;

@@ -220,6 +220,9 @@ test.describe('Тренажёр переговоров', () => {
     expect(snapshot.brief).toContain('Ясна переговоров - снимок');
 
     await expect(page.getByTestId('next-move')).toContainText(/ход|фаз|понимание|резонанс/i);
+    await expect(page.getByTestId('guide-mode')).toContainText(/Гид подготовки переговоров/);
+    await page.getByRole('button', { name: /Дальше/ }).click();
+    await expect(page.getByTestId('guide-mode')).toContainText(/Информационное поле/);
     await expect(page.getByTestId('resonance-score')).not.toHaveText('0');
     expect(errors, errors.join('\n')).toEqual([]);
   });

@@ -61,6 +61,7 @@ The negotiations trainer introduces a reusable workbench pattern for dense tools
 | Area | Purpose | Tokens |
 | --- | --- | --- |
 | Input panel | Scenario capture and presets | `--ys-color-surface-raised`, `--ys-color-border-soft`, `--ys-space-*` |
+| Step guide | Progressive learning and task flow | `--ys-color-surface`, `--ys-color-accent`, status colors |
 | Central map | Primary interactive diagram | `--ys-color-surface`, `--ys-color-accent`, semantic status colors |
 | Output panel | Diagnostics, questions, next action | `--ys-color-surface-raised`, `--ys-color-text-muted` |
 
