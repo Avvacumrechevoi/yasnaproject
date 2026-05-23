@@ -46,10 +46,20 @@ The trainer at `docs/negotiations.html` has six working layers:
 The latest UX/content pass tightens the lesson logic around one repeatable chain:
 
 - situation: what is really happening between A and B right now;
+- signal: what the other side is protecting or testing;
+- hypothesis: what may be underneath the spoken phrase;
 - thinking focus: what the learner must notice before answering;
 - practice: three possible A moves with different consequences;
 - debrief: why the selected move helped or hurt trust;
 - next step: continue the lesson or open the detailed preparation map.
+
+The trainer now treats each answer as the visible result of a thinking loop:
+
+1. Read the situation.
+2. Notice the signal.
+3. Form a hypothesis about hope, risk, status, or trust.
+4. Choose the smallest ethical move.
+5. Compare the consequence with the intention.
 
 Key text decisions:
 
@@ -57,6 +67,7 @@ Key text decisions:
 - keep the learner-facing language human: `вы`, `собеседник`, `ожидание`, `проверка`, `следующий шаг` instead of exposed `A/B` notation;
 - avoid persuasion framing and keep the method ethical: every strong move gives the other side more clarity and a clean way to stop;
 - make each lesson train one observable skill, not a broad negotiation theory block;
+- add a "thinking pause" before answer selection so the user practices forming a hypothesis, not only clicking the right phrase;
 - keep the detailed 12-phase map behind the first completed move so the first screen stays learnable.
 
 ## Safety Boundary

@@ -545,7 +545,7 @@
 
 .np-lesson-route {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: var(--ys-space-3);
 }
 
@@ -827,6 +827,84 @@
 
 .np-method-takeaway {
   border-left: 4px solid var(--ys-color-success);
+}
+
+.np-thinking-lab,
+.np-thinking-pause {
+  display: grid;
+  gap: var(--ys-space-4);
+  max-width: 860px;
+  padding: var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-thinking-lab-head {
+  display: grid;
+  gap: var(--ys-space-2);
+}
+
+.np-thinking-lab-head span,
+.np-thinking-pause strong,
+.np-thinking-pause label span {
+  color: var(--ys-color-accent-hover);
+  font-size: var(--ys-text-xs);
+  font-weight: 850;
+}
+
+.np-thinking-lab-head h3 {
+  margin: 0;
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: var(--ys-text-xl);
+  line-height: var(--ys-line-tight);
+}
+
+.np-thinking-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ys-space-3);
+}
+
+.np-thinking-lab-grid div {
+  min-width: 0;
+  display: grid;
+  gap: var(--ys-space-2);
+  padding: var(--ys-space-3);
+  border-left: 4px solid var(--ys-color-accent);
+  background: var(--ys-color-surface);
+}
+
+.np-thinking-lab-grid strong {
+  color: var(--ys-color-text);
+  font-size: var(--ys-text-sm);
+}
+
+.np-thinking-lab-grid p,
+.np-thinking-pause p {
+  margin: 0;
+  color: var(--ys-color-text-muted);
+}
+
+.np-thinking-pause {
+  border-left: 4px solid var(--ys-color-accent);
+}
+
+.np-thinking-pause label {
+  display: grid;
+  gap: var(--ys-space-2);
+}
+
+.np-thinking-pause textarea {
+  width: 100%;
+  min-height: 76px;
+  resize: vertical;
+  padding: var(--ys-space-3);
+  border: 1px solid var(--ys-color-border);
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-surface-raised);
+  color: var(--ys-color-text);
 }
 
 .np-result-grid {
@@ -2064,7 +2142,6 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 .np-context-facts,
 .np-flow-steps,
 .np-mode-tabs,
-.np-thinking-map,
 .np-course-progress,
 .np-sim-score,
 .np-sim-scenes,
@@ -2118,6 +2195,25 @@ html[data-yasna-theme='dark'] .np-compass-metric {
   border-radius: inherit;
   background: var(--ys-color-success);
   transition: width .25s ease;
+}
+
+.np-thinking-map {
+  margin: 0 0 var(--ys-space-7);
+  border: 0;
+  background: transparent;
+}
+
+.np-thinking-map--route {
+  padding: 0;
+}
+
+.np-lesson-route {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.np-lesson-route div {
+  border: 1px solid var(--ys-color-border-soft);
+  background: var(--ys-color-surface);
 }
 
 .np-sim {
@@ -2270,6 +2366,8 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 }
 
 .np-method-card,
+.np-thinking-lab,
+.np-thinking-pause,
 .np-practice-check,
 .np-method-takeaway {
   padding: var(--ys-space-5);
@@ -2293,6 +2391,10 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 }
 
 .np-method-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.np-thinking-lab-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -2341,6 +2443,8 @@ html[data-yasna-theme='dark'] .np-compass-metric {
   }
 
   .np-method-grid,
+  .np-thinking-lab-grid,
+  .np-lesson-route,
   .np-learning-grid,
   .np-result-grid {
     grid-template-columns: 1fr;
