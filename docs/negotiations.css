@@ -683,6 +683,95 @@
   gap: var(--ys-space-3);
 }
 
+.np-method-card {
+  display: grid;
+  gap: var(--ys-space-4);
+  padding: var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-method-intro {
+  display: grid;
+  gap: var(--ys-space-2);
+}
+
+.np-method-intro strong,
+.np-method-avoid strong,
+.np-practice-check strong,
+.np-method-takeaway strong {
+  color: var(--ys-color-text);
+  font-size: var(--ys-text-sm);
+}
+
+.np-method-intro p,
+.np-method-grid p,
+.np-method-takeaway p {
+  margin: 0;
+  color: var(--ys-color-text-muted);
+}
+
+.np-method-rule {
+  padding: var(--ys-space-3) var(--ys-space-4);
+  border-left: 4px solid var(--ys-color-accent);
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-surface);
+  color: var(--ys-color-text);
+}
+
+.np-method-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ys-space-3);
+}
+
+.np-method-grid div {
+  display: grid;
+  gap: var(--ys-space-2);
+  min-width: 0;
+  padding: var(--ys-space-3);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-surface);
+}
+
+.np-method-grid span {
+  color: var(--ys-color-accent-hover);
+  font-size: var(--ys-text-xs);
+  font-weight: 850;
+}
+
+.np-method-avoid ul,
+.np-practice-check ol {
+  margin: var(--ys-space-2) 0 0;
+  padding-left: 20px;
+  color: var(--ys-color-text-muted);
+}
+
+.np-method-avoid li,
+.np-practice-check li {
+  margin: var(--ys-space-2) 0;
+}
+
+.np-practice-check,
+.np-method-takeaway {
+  display: grid;
+  gap: var(--ys-space-2);
+  padding: var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-practice-check {
+  border-left: 4px solid var(--ys-color-accent);
+}
+
+.np-method-takeaway {
+  border-left: 4px solid var(--ys-color-success);
+}
+
 .np-result-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1793,6 +1882,7 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 
   .np-score-strip,
   .np-sim-score,
+  .np-method-grid,
   .np-result-grid,
   .np-slider-pack,
   .np-two-cols {

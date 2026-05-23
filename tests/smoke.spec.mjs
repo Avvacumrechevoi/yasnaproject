@@ -203,6 +203,8 @@ test.describe('Тренажёр переговоров', () => {
     await expect(page.getByTestId('simulator-mode')).toContainText(/Обучение → тренировка/);
     await expect(page.getByTestId('thinking-map')).toContainText(/Фокус мышления/);
     await expect(page.getByTestId('learning-mode')).toContainText(/Что держать в голове/);
+    await expect(page.getByTestId('learning-mode')).toContainText(/Урок 1\. Вход/);
+    await expect(page.getByTestId('learning-mode')).toContainText(/Формула входа/);
     await expect(page.getByTestId('guide-mode')).toBeHidden();
     await expect(page.locator('#np-course-progress-label')).toContainText(/Урок 1 из 6/);
     await expect(page.locator('[data-sim-turn="2"]')).toBeDisabled();

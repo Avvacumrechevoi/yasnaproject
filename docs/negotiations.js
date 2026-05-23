@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  var STORAGE_KEY = 'yasna_negotiations_trainer_v1';
+  var STORAGE_KEY = 'yasna_negotiations_trainer_v2';
   var DRILL_KEY = 'yasna_negotiations_drill_v1';
 
   var stations = [
@@ -267,13 +267,13 @@
       turns: [
         {
           station: 1,
-          title: 'Вход',
+          title: 'Вход: хочу / не хочу',
           bLine: 'У меня мало времени. Коротко: почему мне вообще стоит это обсуждать?',
-          hint: 'Проверьте "хочу / не хочу" без давления.',
+          hint: 'Не убеждайте. Откройте маленькую проверку, в которой B сохраняет право быстро сказать "нет".',
           choices: [
-            { text: 'Давайте за 10 минут проверим совпадение: что для вас будет хорошим проектом, а я покажу, где мы можем быть полезны.', label: 'Короткий честный вход', effect: { resonance: 10, trust: 8, tension: -6 }, note: 'Вы дали B контроль и не забрали его время.', lesson: 'Резонанс начинается с уважения входа.' },
-            { text: 'У нас сильный проект, такие возможности редко бывают. Надо просто попробовать.', label: 'Продавить интерес', effect: { resonance: -6, trust: -8, tension: 10 }, note: 'Звучит как давление и повышает защиту.', lesson: 'Если B еще не вошел, аргументы становятся шумом.' },
-            { text: 'Ну, можем как-нибудь потом созвониться, если будет удобно.', label: 'Размыть вход', effect: { resonance: -3, trust: -2, tension: 1 }, note: 'Вы избежали давления, но не создали ясного повода.', lesson: 'Мягкость без формы не открывает переговоры.' }
+            { text: 'Давайте не продавать друг другу лишнее. За 10 минут проверим: что для вас будет хорошим проектом, где мы реально можем быть полезны и есть ли смысл продолжать. Если не совпадет - остановимся.', label: 'Проверить совпадение', effect: { resonance: 10, trust: 8, tension: -6 }, note: 'Вы открыли короткую проверку и сохранили B право не входить дальше.', lesson: 'Резонанс начинается не с аргумента, а с безопасного входа.' },
+            { text: 'У нас сильный проект, такие возможности редко бывают. Надо просто попробовать.', label: 'Сразу убеждать', effect: { resonance: -6, trust: -8, tension: 10 }, note: 'Вы начали доказывать ценность до того, как B согласился входить в разговор.', lesson: 'Если B еще не вошел, аргументы становятся шумом.' },
+            { text: 'Понимаю, тогда, наверное, лучше как-нибудь потом созвониться, когда будет удобнее.', label: 'Уйти в туман', effect: { resonance: -3, trust: -2, tension: 1 }, note: 'Вы не давите, но и не создаете понятной причины остаться в контакте.', lesson: 'Мягкость без формы не открывает переговоры.' }
           ]
         },
         {
@@ -411,10 +411,20 @@
 
   var thinkingModels = {
     1: {
-      name: 'Вход без давления',
-      lens: 'Сначала понять, есть ли у B "хочу". Если входа нет, фразы превращаются в шум.',
-      observe: ['Есть ли право быстро отказаться?', 'Короткий ли формат?', 'Не покупаете ли вы внимание давлением?'],
-      skill: 'Открыть встречу так, чтобы B сохранил контроль над входом.'
+      name: 'Урок 1. Вход: хочу / не хочу',
+      lens: 'Цель первого хода - не убедить B, а открыть право на разговор. Если B не видит безопасный короткий вход, дальше будут не переговоры, а сопротивление.',
+      observe: ['Есть ли у B ясный повод дать вам 5-10 минут?', 'Понимает ли B, что может быстро остановить разговор?', 'Вы предлагаете проверку совпадения или уже продаете решение?'],
+      skill: 'Сформулировать вход как маленькую честную проверку интереса B.',
+      why: 'Первые секунды решают, будет ли у встречи живое поле. Хороший вход не продает, не оправдывается и не отступает в туман. Он предлагает B безопасно проверить: есть ли здесь смысл разговаривать.',
+      principle: 'Формула входа: короткая рамка + критерий проверки + право остановиться.',
+      formula: [
+        { title: 'Снять давление', body: 'Не продаем вслепую и не требуем доверия заранее.' },
+        { title: 'Дать формат', body: 'Ограничиваем разговор 5-10 минутами и одним понятным критерием.' },
+        { title: 'Вернуть контроль B', body: 'Если совпадения нет, спокойно останавливаемся без осадка.' }
+      ],
+      practiceCheck: ['В ответе есть короткий формат?', 'B понимает, что может сказать "нет"?', 'Вы проверяете интерес B, а не доказываете свою ценность?'],
+      avoid: ['Доказывать, что проект сильный', 'Просить "просто попробовать"', 'Уходить в неопределенное "созвонимся потом"'],
+      takeaway: 'Хороший вход создает маленький договор о проверке. Только после него у аргументов появляется место.'
     },
     2: {
       name: 'Надежда до аргумента',
@@ -1034,6 +1044,7 @@
               '<div class="np-flow-block-head"><span class="np-flow-badge">1. Объяснение</span><strong>' + esc(lessonModel.name) + '</strong></div>' +
               '<div class="np-learning-card">' +
                 '<div><span class="np-sim-person">Что держать в голове</span><h3>' + esc(lessonModel.name) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
+                renderMethodCard(lessonModel) +
                 '<div class="np-learning-grid">' +
                   '<div><strong>Наблюдать</strong><ul>' + lessonModel.observe.map(function(item){ return '<li>' + esc(item) + '</li>'; }).join('') + '</ul></div>' +
                   '<div><strong>Навык</strong><p>' + esc(lessonModel.skill) + '</p></div>' +
@@ -1045,6 +1056,7 @@
             (practiceVisible ? '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'practice' : 'done-practice-' + lessonIndex) + '" data-testid="practice-mode">' +
               '<div class="np-flow-block-head"><span class="np-flow-badge">2. Тренажер</span><strong>' + esc(lessonModel.skill) + '</strong></div>' +
               '<div class="np-course-lesson"><span>Мысленная задача</span><h3>' + esc(lessonModel.skill) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
+              renderPracticeCheck(lessonModel) +
               '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(lessonTurn.bLine) + '</p><p class="np-sim-hint">' + esc(lessonTurn.hint) + '</p></div>' +
               '<div class="np-sim-practice-label">Практика: выберите ответ A</div>' +
               '<div class="np-sim-choices">' + lessonTurn.choices.map(function(choice, choiceIndex){
@@ -1056,6 +1068,7 @@
             (debriefVisible ? '<div class="np-flow-block np-flow-block--debrief" data-flow-block="' + (isCurrentLesson ? 'debrief' : 'done-debrief-' + lessonIndex) + '" data-testid="debrief-mode">' +
               '<div class="np-flow-block-head"><span class="np-flow-badge">3. Разбор</span><strong>Что произошло с переговорами</strong></div>' +
               '<div class="np-sim-feedback"><strong>' + esc(lessonChoice.note) + '</strong><p>' + esc(lessonChoice.lesson) + '</p></div>' +
+              renderMethodTakeaway(lessonModel) +
               '<div class="np-result-grid">' +
                 '<div><span>Резонанс</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.resonance) || state.simScores.resonance) + '</strong></div>' +
                 '<div><span>Доверие</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.trust) || state.simScores.trust) + '</strong></div>' +
@@ -1136,6 +1149,32 @@
       body: 'Стороны слышат друг друга частично. Нужна проверка обещаний и более ясный следующий шаг.',
       next: 'Пройдите ход заново и выбирайте ответы, где обещание превращается в проверяемое действие.'
     };
+  }
+
+  function renderMethodCard(model){
+    if(!model || (!model.why && !model.principle && !model.formula && !model.avoid)) return '';
+    return '<div class="np-method-card">' +
+      (model.why ? '<div class="np-method-intro"><strong>Зачем этот урок</strong><p>' + esc(model.why) + '</p></div>' : '') +
+      (model.principle ? '<div class="np-method-rule"><strong>' + esc(model.principle) + '</strong></div>' : '') +
+      (model.formula ? '<div class="np-method-grid">' + model.formula.map(function(item){
+        return '<div><span>' + esc(item.title) + '</span><p>' + esc(item.body) + '</p></div>';
+      }).join('') + '</div>' : '') +
+      (model.avoid ? '<div class="np-method-avoid"><strong>Не делать</strong><ul>' + model.avoid.map(function(item){
+        return '<li>' + esc(item) + '</li>';
+      }).join('') + '</ul></div>' : '') +
+    '</div>';
+  }
+
+  function renderPracticeCheck(model){
+    if(!model || !model.practiceCheck) return '';
+    return '<div class="np-practice-check"><strong>Перед выбором проверьте</strong><ol>' + model.practiceCheck.map(function(item){
+      return '<li>' + esc(item) + '</li>';
+    }).join('') + '</ol></div>';
+  }
+
+  function renderMethodTakeaway(model){
+    if(!model || !model.takeaway) return '';
+    return '<div class="np-method-takeaway"><strong>Методический вывод</strong><p>' + esc(model.takeaway) + '</p></div>';
   }
 
   function isFieldComplete(field){
