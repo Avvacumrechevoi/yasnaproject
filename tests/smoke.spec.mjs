@@ -133,7 +133,7 @@ test.describe('Главное приложение', () => {
 test.describe('Environment / themes', () => {
 
   test('YasnaEnv остается в quarantine на активных runtime-страницах', async ({ page }) => {
-    for (const url of ['/', '/duel.html']) {
+    for (const url of ['/', '/duel.html', '/negotiations.html']) {
       await page.goto(url);
       await page.waitForFunction(() => !!window.YasnaEnv);
       const env = await page.evaluate(() => window.YasnaEnv);
@@ -184,6 +184,75 @@ test.describe('Environment / themes', () => {
     expect(states.dark.text).not.toBe(states.light.text);
     expect(states.dark.themeColor).toBe('#151515');
     expect(states.finalMode).toBe('light');
+    expect(errors, errors.join('\n')).toEqual([]);
+  });
+
+});
+
+test.describe('Тренажёр переговоров', () => {
+
+  test('7. Страница переговоров строит диагностику по пресету', async ({ page }) => {
+    const errors = collectBrowserErrors(page);
+
+    await page.goto('/negotiations.html');
+    await page.waitForFunction(() => !!window.YasnaNegotiationsTrainer, { timeout: 10_000 });
+
+    await expect(page.getByRole('heading', { name: /Тренажер переговоров Ясны/ })).toBeVisible();
+    await page.getByRole('button', { name: /Найм/ }).click();
+
+    const snapshot = await page.evaluate(() => ({
+      env: window.YasnaEnv,
+      state: window.YasnaNegotiationsTrainer.getState(),
+      metrics: window.YasnaNegotiationsTrainer.analyze(),
+      brief: window.YasnaNegotiationsTrainer.buildBrief(),
+    }));
+
+    expect(snapshot.env).toMatchObject({
+      project: 'yasnaproject',
+      apiBase: '',
+      telegramBot: '',
+      isQuarantine: true,
+      realtimeDisabled: true,
+    });
+    expect(snapshot.state.preset).toBe('hiring');
+    expect(snapshot.metrics.readiness).toBeGreaterThan(40);
+    expect(snapshot.metrics.resonance).toBeGreaterThan(40);
+    expect(snapshot.brief).toContain('Ясна переговоров - снимок');
+
+    await expect(page.getByTestId('next-move')).toContainText(/ход|фаз|понимание|резонанс/i);
+    await expect(page.getByTestId('resonance-score')).not.toHaveText('0');
+    expect(errors, errors.join('\n')).toEqual([]);
+  });
+
+  test('8. Тренажёр переговоров уважает светлую и тёмную тему', async ({ page }) => {
+    const errors = collectBrowserErrors(page);
+
+    await page.goto('/negotiations.html');
+    await page.waitForFunction(() => !!window.YasnaTheme && !!window.YasnaNegotiationsTrainer);
+
+    const states = await page.evaluate(() => {
+      window.YasnaTheme.set('light');
+      const light = {
+        mode: document.documentElement.dataset.yasnaTheme,
+        surface: getComputedStyle(document.querySelector('.np-map-panel')).backgroundColor,
+        text: getComputedStyle(document.documentElement).getPropertyValue('--ys-color-text').trim(),
+      };
+
+      window.YasnaTheme.set('dark');
+      const dark = {
+        mode: document.documentElement.dataset.yasnaTheme,
+        surface: getComputedStyle(document.querySelector('.np-map-panel')).backgroundColor,
+        text: getComputedStyle(document.documentElement).getPropertyValue('--ys-color-text').trim(),
+      };
+
+      window.YasnaTheme.set('light');
+      return { light, dark };
+    });
+
+    expect(states.light.mode).toBe('light');
+    expect(states.dark.mode).toBe('dark');
+    expect(states.dark.surface).not.toBe(states.light.surface);
+    expect(states.dark.text).not.toBe(states.light.text);
     expect(errors, errors.join('\n')).toEqual([]);
   });
 

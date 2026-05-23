@@ -57,6 +57,8 @@ const activeHtmlFiles = [
   'docs/preview/admin.html',
   'docs/duel.html',
   'docs/preview/duel.html',
+  'docs/negotiations.html',
+  'docs/preview/negotiations.html',
   'docs/games/duel/v2/duel.html',
   'docs/preview/games/duel/v2/duel.html',
 ];

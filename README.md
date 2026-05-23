@@ -3,6 +3,7 @@
 Новая линия разработки проекта "Ясна".
 
 - Сайт: https://avvacumrechevoi.github.io/yasnaproject/
+- Тренажёр переговоров: https://avvacumrechevoi.github.io/yasnaproject/negotiations.html
 - Статус среды: https://avvacumrechevoi.github.io/yasnaproject/environment-status.html
 - Репозиторий: https://github.com/Avvacumrechevoi/yasnaproject
 
@@ -35,6 +36,7 @@
 docs/                    Static app для GitHub Pages
 docs/preview/            Дублирующая preview-ветка внутри static app
 docs/design-system.css   Контракт токенов и light/dark тем
+docs/negotiations.html   Интерактивный тренажёр переговоров по Ясне
 docs/games/duel/         Дуэль, турниры, локальная статистика, leaderboard UI
 docs/core/               Ядро Ясны: env, theme, данные, 3D, карточки, проверки
 content/                 Исходный контент для content bundle
@@ -75,6 +77,8 @@ node scripts/validate-content.mjs
 - [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) - токены, тема и правила миграции UI.
 - [FRONTEND_MODULE_MAP.md](./FRONTEND_MODULE_MAP.md) - карта runtime-страниц,
   preview-копий и безопасных границ рефакторинга.
+- [NEGOTIATIONS_TRAINER.md](./NEGOTIATIONS_TRAINER.md) - анализ и устройство
+  тренажёра переговоров.
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - старый архитектурный аудит,
   полезен как исторический контекст, но содержит ссылки на `yasnanegotiations`.
 

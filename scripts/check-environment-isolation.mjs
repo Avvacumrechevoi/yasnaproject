@@ -24,6 +24,8 @@ const activeHtmlFiles = [
   'docs/preview/admin.html',
   'docs/duel.html',
   'docs/preview/duel.html',
+  'docs/negotiations.html',
+  'docs/preview/negotiations.html',
   'docs/games/duel/v2/duel.html',
   'docs/preview/games/duel/v2/duel.html',
 ];
@@ -37,6 +39,7 @@ const runtimeJsFiles = [
   'docs/preview/games/duel/duel-page.js',
   'docs/admin.js',
   'docs/preview/admin.js',
+  'docs/negotiations.js',
 ];
 
 const serverDeploymentFiles = [
@@ -119,6 +122,8 @@ const emptyMetaExpectations = [
   { file: 'docs/preview/admin.html', names: ['api'] },
   { file: 'docs/duel.html', names: ['api', 'tg-bot'] },
   { file: 'docs/preview/duel.html', names: ['api', 'tg-bot'] },
+  { file: 'docs/negotiations.html', names: ['api', 'tg-bot'] },
+  { file: 'docs/preview/negotiations.html', names: ['api', 'tg-bot'] },
 ];
 
 function getMetaContent(html, metaName) {

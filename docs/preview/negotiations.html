@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes,viewport-fit=cover"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="theme-color" content="#0071e3"/>
+<title>Ясна переговоров - интерактивный тренажер</title>
+<meta name="description" content="Конструктор переговоров по Ясне: две стороны, резонанс, десонанс, игра 3-9, веревки веры и этичный выход без осадка."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Ясна переговоров - интерактивный тренажер"/>
+<meta property="og:description" content="Соберите переговорную ситуацию, проверьте резонанс и получите следующий честный ход."/>
+<meta property="og:url" content="https://avvacumrechevoi.github.io/yasnaproject/preview/negotiations.html"/>
+<meta name="twitter:card" content="summary"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>"/>
+<meta name="yasna:api" content=""/>
+<meta name="yasna:tg-bot" content=""/>
+<meta name="yasna:theme" content="light"/>
+<link rel="stylesheet" href="../design-system.css?v=1"/>
+<link rel="stylesheet" href="../negotiations.css?v=1"/>
+</head>
+<body class="np-page">
+<header class="np-topbar">
+  <a class="np-brand" href="index.html" aria-label="Вернуться к preview-карте Ясны">
+    <span class="np-brand-mark" aria-hidden="true">✦</span>
+    <span class="np-brand-copy">
+      <span class="np-brand-title">Ясна</span>
+      <span class="np-brand-subtitle">переговоров</span>
+    </span>
+  </a>
+  <nav class="np-top-actions hdr-btns" aria-label="Навигация тренажера">
+    <a class="np-top-link" href="index.html">Карта</a>
+    <a class="np-top-link" href="duel.html">Дуэль</a>
+  </nav>
+</header>
+
+<main class="np-shell" id="negotiations-trainer">
+  <section class="np-context" aria-labelledby="np-title">
+    <div>
+      <p class="np-kicker">Конструктор ситуации</p>
+      <h1 id="np-title">Тренажер переговоров Ясны</h1>
+      <p class="np-lead">Соберите сторону A и сторону B, проверьте резонанс, противоречие 3-9, баланс дать/взять и выход, который оставляет хорошую историю.</p>
+    </div>
+    <div class="np-context-facts" aria-label="Опоры методики">
+      <span>Две встречные Ясны</span>
+      <span>Резонанс / десонанс</span>
+      <span>Веревки веры</span>
+      <span>Археология итога</span>
+    </div>
+  </section>
+
+  <section class="np-workbench" aria-label="Рабочее поле тренажера">
+    <aside class="np-panel np-scenario-panel" aria-labelledby="np-scenario-title">
+      <div class="np-panel-head">
+        <div>
+          <p class="np-section-kicker">Шаг 1</p>
+          <h2 id="np-scenario-title">Сценарий</h2>
+        </div>
+        <button class="ys-button np-mini-button" type="button" data-action="reset">Сбросить</button>
+      </div>
+
+      <div class="np-presets" role="group" aria-label="Быстрые сценарии" id="np-presets"></div>
+
+      <form class="np-form" id="np-form">
+        <label class="np-field">
+          <span>Предмет переговоров</span>
+          <textarea data-field="subject" rows="3" placeholder="О чем договариваемся, какой результат должен измениться?"></textarea>
+        </label>
+
+        <div class="np-two-cols">
+          <label class="np-field">
+            <span>Сторона A</span>
+            <input data-field="partyA" type="text" placeholder="Мы / я / команда"/>
+          </label>
+          <label class="np-field">
+            <span>Сторона B</span>
+            <input data-field="partyB" type="text" placeholder="Контрагент / кандидат / руководитель"/>
+          </label>
+        </div>
+
+        <label class="np-field">
+          <span>A хочет взять</span>
+          <textarea data-field="aTake" rows="2" placeholder="Что A хочет получить явно?"></textarea>
+        </label>
+        <label class="np-field">
+          <span>A готов дать</span>
+          <textarea data-field="aGive" rows="2" placeholder="Что A реально может дать B?"></textarea>
+        </label>
+        <label class="np-field">
+          <span>B хочет взять</span>
+          <textarea data-field="bTake" rows="2" placeholder="Какая надежда, выгода, статус или удовольствие у B?"></textarea>
+        </label>
+        <label class="np-field">
+          <span>B должен поверить</span>
+          <textarea data-field="bVisible" rows="2" placeholder="Какая веревка веры должна выдержать?"></textarea>
+        </label>
+        <label class="np-field">
+          <span>Тень / скрытый слой</span>
+          <textarea data-field="bHidden" rows="2" placeholder="Что может быть не сказано: статус, страх, прежний осадок, иная цель?"></textarea>
+        </label>
+        <label class="np-field">
+          <span>Место, время, атмосфера</span>
+          <textarea data-field="placeTime" rows="2" placeholder="Своевременность, комфорт, шум, давление, формат встречи."></textarea>
+        </label>
+        <label class="np-field">
+          <span>История после встречи</span>
+          <textarea data-field="fairExit" rows="2" placeholder="Как разойтись так, чтобы не оставить пепел и золу?"></textarea>
+        </label>
+      </form>
+    </aside>
+
+    <section class="np-map-panel" aria-labelledby="np-map-title">
+      <div class="np-score-strip" aria-label="Сводная диагностика">
+        <div class="np-score">
+          <span>Готовность</span>
+          <strong data-testid="readiness-score" id="np-readiness">0</strong>
+        </div>
+        <div class="np-score">
+          <span>Резонанс</span>
+          <strong data-testid="resonance-score" id="np-resonance">0</strong>
+        </div>
+        <div class="np-score">
+          <span>Риск срыва</span>
+          <strong data-testid="desonance-score" id="np-desonance">0</strong>
+        </div>
+      </div>
+
+      <div class="np-panel-head np-map-head">
+        <div>
+          <p class="np-section-kicker">Шаг 2</p>
+          <h2 id="np-map-title">Карта 12 фаз</h2>
+        </div>
+        <button class="ys-button ys-button--primary np-mini-button" type="button" data-action="focus-recommended">Рекомендовать фазу</button>
+      </div>
+
+      <div class="np-compass-wrap">
+        <svg class="np-compass" id="np-compass" viewBox="0 0 640 640" role="img" aria-labelledby="np-compass-title np-compass-desc">
+          <title id="np-compass-title">Карта Ясны переговоров</title>
+          <desc id="np-compass-desc">Двенадцать фаз переговоров от информационного поля до итога.</desc>
+          <g id="np-compass-layer"></g>
+        </svg>
+        <div class="np-axis np-axis-top">Будущие надежды</div>
+        <div class="np-axis np-axis-bottom">Прошлая история</div>
+        <div class="np-axis np-axis-left">Отражение A</div>
+        <div class="np-axis np-axis-right">Тень B</div>
+      </div>
+
+      <div class="np-station-grid" id="np-station-grid" role="list" aria-label="Фазы переговоров"></div>
+
+      <article class="np-phase-card" aria-live="polite">
+        <p class="np-section-kicker">Текущая фаза</p>
+        <h3 id="np-phase-title">Информационное поле</h3>
+        <p id="np-phase-body"></p>
+        <div class="np-phase-prompts" id="np-phase-prompts"></div>
+      </article>
+    </section>
+
+    <aside class="np-panel np-output-panel" aria-labelledby="np-output-title">
+      <div class="np-panel-head">
+        <div>
+          <p class="np-section-kicker">Шаг 3</p>
+          <h2 id="np-output-title">Следующий ход</h2>
+        </div>
+        <button class="ys-button np-mini-button" type="button" data-action="copy-brief">Снимок</button>
+      </div>
+
+      <section class="np-next-move" data-testid="next-move" id="np-next-move"></section>
+
+      <div class="np-slider-pack" aria-label="Настройки диагностики">
+        <label class="np-slider">
+          <span>Интерес B</span>
+          <input data-field="bInterest" type="range" min="0" max="100" step="1"/>
+          <output data-output="bInterest">0</output>
+        </label>
+        <label class="np-slider">
+          <span>Общая зона</span>
+          <input data-field="sharedGround" type="range" min="0" max="100" step="1"/>
+          <output data-output="sharedGround">0</output>
+        </label>
+        <label class="np-slider">
+          <span>Противоречие 3-9</span>
+          <input data-field="contradiction" type="range" min="0" max="100" step="1"/>
+          <output data-output="contradiction">0</output>
+        </label>
+        <label class="np-slider">
+          <span>Честный обмен</span>
+          <input data-field="fairness" type="range" min="0" max="100" step="1"/>
+          <output data-output="fairness">0</output>
+        </label>
+        <label class="np-slider">
+          <span>Атмосфера</span>
+          <input data-field="atmosphere" type="range" min="0" max="100" step="1"/>
+          <output data-output="atmosphere">0</output>
+        </label>
+        <label class="np-slider">
+          <span>Скрытый риск</span>
+          <input data-field="hiddenRisk" type="range" min="0" max="100" step="1"/>
+          <output data-output="hiddenRisk">0</output>
+        </label>
+      </div>
+
+      <section class="np-questions">
+        <h3>Вопросы на встречу</h3>
+        <ol id="np-questions"></ol>
+      </section>
+
+      <section class="np-guard">
+        <h3>Граница тренажера</h3>
+        <p>Цель - не продавить B, а найти полноценные переговоры: реальную надежду, честный обмен и выход без разрушительного осадка.</p>
+      </section>
+    </aside>
+  </section>
+
+  <section class="np-drills" aria-labelledby="np-drills-title">
+    <div class="np-drill-head">
+      <div>
+        <p class="np-section-kicker">Практика</p>
+        <h2 id="np-drills-title">Короткие упражнения</h2>
+      </div>
+      <div class="np-drill-tabs" id="np-drill-tabs" role="tablist" aria-label="Упражнения переговоров"></div>
+    </div>
+    <div class="np-drill-body" id="np-drill-body"></div>
+  </section>
+</main>
+
+<div class="np-toast" id="np-toast" role="status" aria-live="polite"></div>
+
+<script>
+  window.YASNA_LEADERBOARD_API = '';
+  window.YASNA_TG_BOT = '';
+  window.YASNA_DISABLE_SHARED_REALTIME = true;
+</script>
+<script src="../core/env.js?v=1"></script>
+<script src="../core/theme.js?v=1"></script>
+<script src="../negotiations.js?v=1"></script>
+</body>
+</html>

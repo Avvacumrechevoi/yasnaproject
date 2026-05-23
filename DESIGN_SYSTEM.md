@@ -54,6 +54,18 @@ New shared UI should start from these primitives:
 
 Existing React/inline-styled UI can remain as-is until the corresponding module is refactored. When a module is touched, prefer moving repeated colors, borders, focus states, and spacing to the `--ys-*` contract.
 
+## New Pattern: Trainer Workbench
+
+The negotiations trainer introduces a reusable workbench pattern for dense tools:
+
+| Area | Purpose | Tokens |
+| --- | --- | --- |
+| Input panel | Scenario capture and presets | `--ys-color-surface-raised`, `--ys-color-border-soft`, `--ys-space-*` |
+| Central map | Primary interactive diagram | `--ys-color-surface`, `--ys-color-accent`, semantic status colors |
+| Output panel | Diagnostics, questions, next action | `--ys-color-surface-raised`, `--ys-color-text-muted` |
+
+The pattern is intentionally not a landing page: controls, diagnostics, and the diagram are visible immediately on desktop and stack in the same order on mobile.
+
 ## Checks
 
 These checks protect the design-system boundary:
