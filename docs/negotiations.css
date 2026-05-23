@@ -266,6 +266,35 @@
   gap: var(--ys-space-3);
 }
 
+.np-course-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+  gap: var(--ys-space-4);
+  align-items: center;
+  margin: 0 0 var(--ys-space-5);
+}
+
+.np-course-progress span {
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+  font-weight: 800;
+}
+
+.np-course-progress-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-course-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ys-color-accent);
+  transition: width .18s ease;
+}
+
 .np-sim-scene {
   min-height: 34px;
   padding: 0 var(--ys-space-4);
@@ -324,6 +353,35 @@
   background: var(--ys-color-surface);
 }
 
+.np-course-lesson {
+  display: grid;
+  gap: var(--ys-space-2);
+  padding: var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-course-lesson span,
+.np-sim-practice-label {
+  color: var(--ys-color-accent-hover);
+  font-size: var(--ys-text-xs);
+  font-weight: 850;
+}
+
+.np-course-lesson h3 {
+  margin: 0;
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: var(--ys-text-xl);
+  line-height: var(--ys-line-tight);
+}
+
+.np-course-lesson p {
+  margin: 0;
+  color: var(--ys-color-text-muted);
+}
+
 .np-sim-meta {
   display: flex;
   flex-wrap: wrap;
@@ -378,6 +436,10 @@
 .np-sim-choices {
   display: grid;
   gap: var(--ys-space-3);
+}
+
+.np-sim-practice-label {
+  margin-bottom: calc(var(--ys-space-4) * -1);
 }
 
 .np-sim-choice {
@@ -452,6 +514,9 @@
   border: 1px solid var(--ys-color-border);
   border-radius: var(--ys-radius-md);
   background: var(--ys-color-surface);
+  color: var(--ys-color-text);
+  cursor: pointer;
+  text-align: left;
 }
 
 .np-sim-turn-num {
@@ -497,6 +562,15 @@
 .np-sim-turn.is-done .np-sim-turn-num {
   background: var(--ys-color-success);
   color: #fff;
+}
+
+.np-sim-turn.is-locked {
+  opacity: .62;
+  cursor: not-allowed;
+}
+
+.np-sim-turn:disabled {
+  pointer-events: none;
 }
 
 .np-sim-log {
@@ -1315,6 +1389,11 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 
   .np-sim-head {
     display: grid;
+  }
+
+  .np-course-progress {
+    grid-template-columns: 1fr;
+    gap: var(--ys-space-2);
   }
 
   .np-guide {

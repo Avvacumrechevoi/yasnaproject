@@ -199,9 +199,16 @@ test.describe('Тренажёр переговоров', () => {
 
     await expect(page.getByRole('heading', { name: /Тренажер переговоров Ясны/ })).toBeVisible();
     await expect(page.getByTestId('simulator-mode')).toContainText(/Симулятор встречи/);
+    await expect(page.getByTestId('simulator-mode')).toContainText(/Практикум по шагам/);
+    await expect(page.locator('#np-course-progress-label')).toContainText(/Урок 1 из 6/);
+    await expect(page.locator('[data-sim-turn="2"]')).toBeDisabled();
     await page.locator('[data-sim-scene="hiring"]').click();
     await page.locator('[data-sim-choice="0"]').click();
     await expect(page.getByTestId('simulator-mode')).toContainText(/Резонанс начинается/);
+    await expect(page.locator('#np-sim-next')).toBeEnabled();
+    await page.locator('#np-sim-next').click();
+    await expect(page.locator('#np-course-progress-label')).toContainText(/Урок 2 из 6/);
+    await expect(page.locator('[data-sim-turn="1"]')).toBeEnabled();
 
     const simSnapshot = await page.evaluate(() => ({
       state: window.YasnaNegotiationsTrainer.getState(),

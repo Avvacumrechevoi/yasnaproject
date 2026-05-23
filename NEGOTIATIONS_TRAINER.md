@@ -26,13 +26,13 @@ The attached PDF and meeting transcript point to one product direction: not a li
 | Checklist form | Useful preparation | Too flat for the Yasna 12-phase structure |
 | Interactive constructor | Maps directly to the source material | Requires more UI and test coverage |
 
-The implemented option is the interactive constructor. It keeps the backend in quarantine and turns the transcript's product idea into a working static trainer.
+The implemented option is a sequential interactive practice flow. It keeps the backend in quarantine and turns the transcript's product idea into a working static trainer.
 
 ## Implemented Shape
 
-The trainer at `docs/negotiations.html` has five working layers:
+The trainer at `docs/negotiations.html` has six working layers:
 
-- simulator-first mode: choose a scene, answer B, see resonance/trust/tension effects;
+- simulator course: choose a scene, move lesson by lesson, answer B, unlock the next step, see resonance/trust/tension effects;
 - step-by-step guide: an eight-step preparation flow tied to the Yasna phases;
 - scenario setup: parties, subject, give/take, hidden layer, atmosphere, exit history;
 - 12-phase Yasna map: information field through final result, with recommended phase;

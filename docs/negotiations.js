@@ -605,6 +605,43 @@
     return scene.turns[clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1)] || scene.turns[0];
   }
 
+  function simChoiceIndex(scene, turnIndex){
+    var entry = state.simHistory[turnIndex];
+    var turn = scene.turns[turnIndex];
+    if(!entry || !turn) return null;
+    if(entry.choiceIndex != null && Number.isFinite(Number(entry.choiceIndex)) && turn.choices[Number(entry.choiceIndex)]) return Number(entry.choiceIndex);
+    var byLabel = turn.choices.findIndex(function(choice){ return choice.label === entry.choice; });
+    return byLabel >= 0 ? byLabel : null;
+  }
+
+  function completedSimTurns(scene){
+    var count = 0;
+    for(var i = 0; i < scene.turns.length; i += 1) {
+      if(simChoiceIndex(scene, i) == null) break;
+      count += 1;
+    }
+    return count;
+  }
+
+  function maxUnlockedSimTurn(scene){
+    return clamp(completedSimTurns(scene), 0, scene.turns.length - 1);
+  }
+
+  function recomputeSimScores(){
+    var scene = currentSimScene();
+    var scores = Object.assign({}, scene.startScores);
+    var lastTurn = state.simFinished ? scene.turns.length - 1 : Number(state.activeSimTurn || 0);
+    for(var i = 0; i <= lastTurn; i += 1) {
+      var choiceIndex = simChoiceIndex(scene, i);
+      if(choiceIndex == null) continue;
+      var effect = scene.turns[i].choices[choiceIndex].effect || {};
+      scores.resonance = round(Number(scores.resonance) + Number(effect.resonance || 0));
+      scores.trust = round(Number(scores.trust) + Number(effect.trust || 0));
+      scores.tension = round(Number(scores.tension) + Number(effect.tension || 0));
+    }
+    state.simScores = scores;
+  }
+
   function normalizeSimState(){
     var scene = simSceneById(state.activeSimScene || defaults.activeSimScene);
     state.activeSimScene = scene.id;
@@ -612,14 +649,27 @@
     state.simSelectedChoice = state.simSelectedChoice == null ? null : Number(state.simSelectedChoice);
     state.simScores = Object.assign({}, scene.startScores, state.simScores || {});
     state.simHistory = Array.isArray(state.simHistory) ? state.simHistory : [];
+    state.simHistory = state.simHistory.slice(0, scene.turns.length).map(function(entry, index){
+      if(!entry) return entry;
+      var copy = Object.assign({}, entry);
+      if(copy.choiceIndex == null) {
+        var found = scene.turns[index].choices.findIndex(function(choice){ return choice.label === copy.choice; });
+        if(found >= 0) copy.choiceIndex = found;
+      }
+      return copy;
+    });
     state.simFinished = !!state.simFinished;
+    if(state.simSelectedChoice != null && !scene.turns[state.activeSimTurn].choices[state.simSelectedChoice]) {
+      state.simSelectedChoice = null;
+    }
+    recomputeSimScores();
   }
 
   function syncSimToDiagnostics(){
     state.sharedGround = round(state.simScores.resonance);
     state.bInterest = round(state.simScores.trust);
     state.contradiction = round(state.simScores.tension);
-    state.hiddenRisk = round(avg([state.hiddenRisk, state.simScores.tension]));
+    state.hiddenRisk = round(state.simScores.tension);
   }
 
   function setSimScene(id){
@@ -639,27 +689,44 @@
   }
 
   function selectSimChoice(index){
+    normalizeSimState();
     var turn = currentSimTurn();
     var choice = turn.choices[Number(index)];
     if(!choice || state.simFinished) return;
     state.simSelectedChoice = Number(index);
-    state.simScores = {
-      resonance: round(Number(state.simScores.resonance) + Number(choice.effect.resonance || 0)),
-      trust: round(Number(state.simScores.trust) + Number(choice.effect.trust || 0)),
-      tension: round(Number(state.simScores.tension) + Number(choice.effect.tension || 0))
-    };
     state.activeStation = turn.station;
     state.simHistory[state.activeSimTurn] = {
       turn: turn.title,
       choice: choice.label,
+      choiceIndex: Number(index),
       note: choice.note,
-      scores: Object.assign({}, state.simScores)
+      scores: {}
     };
+    recomputeSimScores();
+    state.simHistory[state.activeSimTurn].scores = Object.assign({}, state.simScores);
+    syncSimToDiagnostics();
+    render();
+  }
+
+  function setSimTurn(index){
+    normalizeSimState();
+    var scene = currentSimScene();
+    var next = clamp(Number(index), 0, scene.turns.length - 1);
+    if(next > maxUnlockedSimTurn(scene) && !state.simFinished) {
+      showToast('Урок откроется после ответа');
+      return;
+    }
+    state.simFinished = false;
+    state.activeSimTurn = next;
+    state.simSelectedChoice = simChoiceIndex(scene, next);
+    state.activeStation = currentSimTurn().station;
+    recomputeSimScores();
     syncSimToDiagnostics();
     render();
   }
 
   function nextSimTurn(){
+    normalizeSimState();
     var scene = currentSimScene();
     if(state.simSelectedChoice == null && !state.simFinished) {
       showToast('Сначала выберите ответ');
@@ -671,8 +738,10 @@
       return;
     }
     state.activeSimTurn = Number(state.activeSimTurn) + 1;
-    state.simSelectedChoice = null;
+    state.simSelectedChoice = simChoiceIndex(scene, state.activeSimTurn);
     state.activeStation = currentSimTurn().station;
+    recomputeSimScores();
+    syncSimToDiagnostics();
     render();
   }
 
@@ -688,13 +757,26 @@
     var turn = currentSimTurn();
     var selected = state.simSelectedChoice == null ? null : turn.choices[state.simSelectedChoice];
     var finalText = finalSimText();
+    var completed = completedSimTurns(scene);
+    var progressPercent = state.simFinished ? 100 : Math.round(completed / scene.turns.length * 100);
+    var unlocked = maxUnlockedSimTurn(scene);
 
     els.simScenes.innerHTML = simScenes.map(function(sceneItem){
       return '<button class="np-sim-scene" type="button" data-sim-scene="' + sceneItem.id + '" aria-pressed="' + (sceneItem.id === scene.id ? 'true' : 'false') + '">' + esc(sceneItem.title) + '</button>';
     }).join('');
+    els.courseProgressLabel.textContent = state.simFinished
+      ? 'Курс завершен: ' + scene.turns.length + ' из ' + scene.turns.length
+      : 'Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + ' · завершено ' + completed;
+    els.courseProgressFill.style.width = progressPercent + '%';
     els.simResonance.textContent = String(round(state.simScores.resonance));
     els.simTrust.textContent = String(round(state.simScores.trust));
     els.simTension.textContent = String(round(state.simScores.tension));
+    if(els.simNext) {
+      els.simNext.disabled = state.simFinished || state.simSelectedChoice == null;
+      els.simNext.textContent = state.simFinished
+        ? 'Курс завершен'
+        : (Number(state.activeSimTurn) >= scene.turns.length - 1 ? 'Завершить курс' : 'Следующий урок');
+    }
 
     if(state.simFinished) {
       els.simCard.innerHTML =
@@ -703,8 +785,10 @@
         '<div class="np-sim-feedback"><strong>Следующая тренировка</strong><p>' + esc(finalText.next) + '</p></div>';
     } else {
       els.simCard.innerHTML =
-        '<div class="np-sim-meta"><span>Ход ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>' + esc(turn.title) + '</span></div>' +
+        '<div class="np-sim-meta"><span>Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>' + esc(turn.title) + '</span></div>' +
+        '<div class="np-course-lesson"><span>Короткий урок</span><h3>' + esc(turn.title) + '</h3><p>' + esc(stationById(turn.station).body) + '</p></div>' +
         '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(turn.bLine) + '</p><p class="np-sim-hint">' + esc(turn.hint) + '</p></div>' +
+        '<div class="np-sim-practice-label">Практика: выберите ответ A</div>' +
         '<div class="np-sim-choices">' + turn.choices.map(function(choice, index){
           return '<button class="np-sim-choice' + (Number(state.simSelectedChoice) === index ? ' is-selected' : '') + '" type="button" data-sim-choice="' + index + '">' +
             '<strong>' + esc(choice.label) + '</strong><span>' + esc(choice.text) + '</span></button>';
@@ -715,11 +799,12 @@
     els.simTrack.innerHTML = scene.turns.map(function(item, index){
       var done = index < Number(state.activeSimTurn) || (index === Number(state.activeSimTurn) && state.simSelectedChoice != null) || state.simFinished;
       var current = index === Number(state.activeSimTurn) && !state.simFinished;
-      return '<div class="np-sim-turn' + (done ? ' is-done' : '') + (current ? ' is-current' : '') + '">' +
+      var locked = index > unlocked && !state.simFinished;
+      return '<button class="np-sim-turn' + (done ? ' is-done' : '') + (current ? ' is-current' : '') + (locked ? ' is-locked' : '') + '" type="button" data-sim-turn="' + index + '" ' + (locked ? 'disabled aria-disabled="true"' : '') + '>' +
         '<span class="np-sim-turn-num">' + (index + 1) + '</span>' +
-        '<span><strong>' + esc(item.title) + '</strong><span>Фаза ' + item.station + '</span></span>' +
-        '<span class="np-sim-turn-state">' + (done ? 'OK' : '...') + '</span>' +
-      '</div>';
+        '<span><strong>' + esc(item.title) + '</strong><span>Урок · фаза ' + item.station + '</span></span>' +
+        '<span class="np-sim-turn-state">' + (done ? 'OK' : (locked ? 'Закрыт' : 'Сейчас')) + '</span>' +
+      '</button>';
     }).join('');
 
     els.simLog.innerHTML = '<h3>Журнал ходов</h3>' + (state.simHistory.length
@@ -941,7 +1026,17 @@
 
   function applyPreset(id){
     var preset = presets.find(function(item){ return item.id === id; }) || presets[0];
+    var linkedScene = simScenes.find(function(scene){ return scene.preset === preset.id; });
     state = Object.assign({}, defaults, preset.values, { preset: preset.id });
+    if(linkedScene) {
+      state.activeSimScene = linkedScene.id;
+      state.activeSimTurn = 0;
+      state.simSelectedChoice = null;
+      state.simFinished = false;
+      state.simScores = Object.assign({}, linkedScene.startScores);
+      state.simHistory = [];
+    }
+    normalizeSimState();
     render();
     showToast('Сценарий применен');
   }
@@ -981,6 +1076,7 @@
 
   function resetAll(){
     state = Object.assign({}, defaults);
+    normalizeSimState();
     render();
     showToast('Тренажер очищен');
   }
@@ -1069,6 +1165,12 @@
         return;
       }
 
+      var simTurn = event.target.closest('[data-sim-turn]');
+      if(simTurn) {
+        setSimTurn(simTurn.getAttribute('data-sim-turn'));
+        return;
+      }
+
       var station = event.target.closest('[data-station]');
       if(station) {
         setStation(station.getAttribute('data-station'));
@@ -1130,6 +1232,9 @@
     els.simTension = document.getElementById('np-sim-tension');
     els.simTrack = document.getElementById('np-sim-track');
     els.simLog = document.getElementById('np-sim-log');
+    els.courseProgressLabel = document.getElementById('np-course-progress-label');
+    els.courseProgressFill = document.getElementById('np-course-progress-fill');
+    els.simNext = document.getElementById('np-sim-next');
     els.guideCard = document.getElementById('np-guide-card');
     els.guideRail = document.getElementById('np-guide-rail');
     els.guideProgressLabel = document.getElementById('np-guide-progress-label');
@@ -1152,6 +1257,7 @@
       setSimScene: setSimScene,
       selectSimChoice: selectSimChoice,
       nextSimTurn: nextSimTurn,
+      setSimTurn: setSimTurn,
       guideProgress: guideProgress,
       setGuideStep: setGuideStep,
       applyPreset: applyPreset,
