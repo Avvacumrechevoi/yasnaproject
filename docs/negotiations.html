@@ -19,7 +19,7 @@
 <meta name="yasna:tg-bot" content=""/>
 <meta name="yasna:theme" content="light"/>
 <link rel="stylesheet" href="design-system.css?v=2"/>
-<link rel="stylesheet" href="negotiations.css?v=5"/>
+<link rel="stylesheet" href="negotiations.css?v=6"/>
 </head>
 <body class="np-page">
 <header class="np-topbar">
@@ -51,7 +51,18 @@
     </div>
   </section>
 
-  <section class="np-sim" aria-labelledby="np-sim-title" data-testid="simulator-mode">
+  <section class="np-flow" aria-labelledby="np-flow-title" data-testid="sequence-flow">
+    <div class="np-flow-head">
+      <div>
+        <p class="np-section-kicker">Маршрут продукта</p>
+        <h2 id="np-flow-title">Последовательная подача</h2>
+      </div>
+      <p id="np-flow-hint">Сначала понять схему, потом сделать ход.</p>
+    </div>
+    <div class="np-flow-steps" id="np-flow-steps" role="tablist" aria-label="Этапы тренажера"></div>
+  </section>
+
+  <section class="np-sim" aria-labelledby="np-sim-title" data-testid="simulator-mode" data-flow-section="learn practice debrief">
     <div class="np-sim-main">
       <div class="np-sim-head">
         <div>
@@ -93,7 +104,7 @@
     </aside>
   </section>
 
-  <section class="np-guide" aria-labelledby="np-guide-title" data-testid="guide-mode">
+  <section class="np-guide" aria-labelledby="np-guide-title" data-testid="guide-mode" data-flow-section="map">
     <div class="np-guide-main">
       <div class="np-guide-head">
         <div>
@@ -117,7 +128,7 @@
     <div class="np-guide-rail" id="np-guide-rail" role="tablist" aria-label="Шаги подготовки переговоров"></div>
   </section>
 
-  <section class="np-workbench" aria-label="Рабочее поле тренажера">
+  <section class="np-workbench" aria-label="Рабочее поле тренажера" data-flow-section="map">
     <aside class="np-panel np-scenario-panel" aria-labelledby="np-scenario-title">
       <div class="np-panel-head">
         <div>
@@ -279,7 +290,7 @@
     </aside>
   </section>
 
-  <section class="np-drills" aria-labelledby="np-drills-title">
+  <section class="np-drills" aria-labelledby="np-drills-title" data-flow-section="map">
     <div class="np-drill-head">
       <div>
         <p class="np-section-kicker">Практика</p>
@@ -300,6 +311,6 @@
 </script>
 <script src="core/env.js?v=1"></script>
 <script src="core/theme.js?v=1"></script>
-<script src="negotiations.js?v=5"></script>
+<script src="negotiations.js?v=6"></script>
 </body>
 </html>

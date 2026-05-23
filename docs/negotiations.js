@@ -383,6 +383,7 @@
     activeGuideStep: 0,
     activeSimScene: 'hiring',
     activeSimTurn: 0,
+    activeFlowStage: 'learn',
     simMode: 'learn',
     simSelectedChoice: null,
     simFinished: false,
@@ -456,6 +457,33 @@
       skill: 'Закрыть встречу так, чтобы следующий цикл оставался возможным.'
     }
   };
+
+  var flowStages = [
+    {
+      id: 'learn',
+      title: 'Объяснение',
+      label: 'понять схему',
+      hint: 'Сначала смотрим на переговоры как на поле: A/B, время, тень, надежды и обмен.'
+    },
+    {
+      id: 'practice',
+      title: 'Отработка',
+      label: 'сделать ход',
+      hint: 'Теперь выбираем ответ A и тренируем конкретный навык мышления.'
+    },
+    {
+      id: 'debrief',
+      title: 'Разбор',
+      label: 'увидеть последствия',
+      hint: 'После ответа смотрим, что произошло с резонансом, доверием и напряжением.'
+    },
+    {
+      id: 'map',
+      title: 'Карта',
+      label: 'собрать ситуацию',
+      hint: 'После первого хода можно открыть подробную подготовку, 12 фаз и упражнения.'
+    }
+  ];
 
   var state = loadState();
   normalizeSimState();
@@ -657,6 +685,23 @@
     return scene.turns[clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1)] || scene.turns[0];
   }
 
+  function flowStageById(id){
+    return flowStages.find(function(stage){ return stage.id === id; }) || flowStages[0];
+  }
+
+  function isFlowStageUnlocked(id){
+    if(id === 'learn' || id === 'practice') return true;
+    if(id === 'debrief') return state.simSelectedChoice != null || state.simFinished;
+    if(id === 'map') return completedSimTurns(currentSimScene()) > 0 || state.simFinished;
+    return false;
+  }
+
+  function syncFlowToSim(){
+    if(state.activeFlowStage === 'learn') state.simMode = 'learn';
+    if(state.activeFlowStage === 'practice') state.simMode = 'practice';
+    if(state.activeFlowStage === 'debrief') state.simMode = 'practice';
+  }
+
   function thinkingModelForTurn(turn){
     return thinkingModels[turn.station] || {
       name: stationById(turn.station).title,
@@ -715,6 +760,9 @@
     state.activeSimScene = scene.id;
     state.activeSimTurn = clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1);
     state.simMode = state.simMode === 'practice' ? 'practice' : 'learn';
+    state.activeFlowStage = flowStageById(state.activeFlowStage).id;
+    if(!isFlowStageUnlocked(state.activeFlowStage)) state.activeFlowStage = state.simSelectedChoice == null ? 'learn' : 'debrief';
+    syncFlowToSim();
     state.simSelectedChoice = state.simSelectedChoice == null ? null : Number(state.simSelectedChoice);
     state.simScores = Object.assign({}, scene.startScores, state.simScores || {});
     state.simHistory = Array.isArray(state.simHistory) ? state.simHistory : [];
@@ -750,6 +798,7 @@
     state.simScores = Object.assign({}, scene.startScores);
     state.simHistory = [];
     state.simMode = 'learn';
+    state.activeFlowStage = 'learn';
     var linked = presets.find(function(preset){ return preset.id === scene.preset; });
     if(linked) state = Object.assign({}, state, linked.values, { preset: linked.id });
     state.activeStation = scene.turns[0].station;
@@ -766,6 +815,7 @@
     state.simSelectedChoice = Number(index);
     state.activeStation = turn.station;
     state.simMode = 'practice';
+    state.activeFlowStage = 'debrief';
     state.simHistory[state.activeSimTurn] = {
       turn: turn.title,
       choice: choice.label,
@@ -791,6 +841,7 @@
     state.activeSimTurn = next;
     state.simSelectedChoice = simChoiceIndex(scene, next);
     state.simMode = state.simSelectedChoice == null ? 'learn' : 'practice';
+    state.activeFlowStage = state.simSelectedChoice == null ? 'learn' : 'debrief';
     state.activeStation = currentSimTurn().station;
     recomputeSimScores();
     syncSimToDiagnostics();
@@ -812,6 +863,7 @@
     state.activeSimTurn = Number(state.activeSimTurn) + 1;
     state.simSelectedChoice = simChoiceIndex(scene, state.activeSimTurn);
     state.simMode = state.simSelectedChoice == null ? 'learn' : 'practice';
+    state.activeFlowStage = state.simSelectedChoice == null ? 'learn' : 'debrief';
     state.activeStation = currentSimTurn().station;
     recomputeSimScores();
     syncSimToDiagnostics();
@@ -826,12 +878,27 @@
   function setSimMode(mode){
     if(state.simFinished) return;
     state.simMode = mode === 'practice' ? 'practice' : 'learn';
+    state.activeFlowStage = state.simMode === 'practice' ? 'practice' : 'learn';
     render();
   }
 
   function startSimPractice(){
     setSimMode('practice');
     showToast('Теперь отрабатываем навык');
+  }
+
+  function setFlowStage(id){
+    var stage = flowStageById(id);
+    if(!isFlowStageUnlocked(stage.id)) {
+      showToast(stage.id === 'map' ? 'Сначала сделайте первый ход' : 'Сначала выберите ответ');
+      return;
+    }
+    state.activeFlowStage = stage.id;
+    if(stage.id === 'learn') state.simMode = 'learn';
+    if(stage.id === 'practice' || stage.id === 'debrief') state.simMode = 'practice';
+    render();
+    var target = document.querySelector(stage.id === 'map' ? '.np-guide' : '.np-sim');
+    if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function renderSim(){
@@ -924,6 +991,27 @@
     els.simLog.innerHTML = '<h3>Журнал ходов</h3>' + (state.simHistory.length
       ? '<ul>' + state.simHistory.map(function(item){ return '<li><strong>' + esc(item.turn) + ':</strong> ' + esc(item.choice) + '</li>'; }).join('') + '</ul>'
       : '<p>Выберите первый ответ. После каждого хода здесь появится короткая история решений.</p>');
+  }
+
+  function renderFlow(){
+    if(!els.flowSteps) return;
+    var active = flowStageById(state.activeFlowStage);
+    els.flowHint.textContent = active.hint;
+    els.flowSteps.innerHTML = flowStages.map(function(stage, index){
+      var unlocked = isFlowStageUnlocked(stage.id);
+      var selected = stage.id === active.id;
+      return '<button class="np-flow-step' + (selected ? ' is-current' : '') + (unlocked ? ' is-unlocked' : ' is-locked') + '" type="button" role="tab" data-flow-stage="' + stage.id + '" aria-selected="' + (selected ? 'true' : 'false') + '" ' + (unlocked ? '' : 'disabled aria-disabled="true"') + '>' +
+        '<span class="np-flow-step-num">' + (index + 1) + '</span>' +
+        '<span class="np-flow-step-copy"><strong>' + esc(stage.title) + '</strong><span>' + esc(stage.label) + '</span></span>' +
+        '<span class="np-flow-step-state">' + (selected ? 'Сейчас' : (unlocked ? 'Открыт' : 'Закрыт')) + '</span>' +
+      '</button>';
+    }).join('');
+    els.flowSections.forEach(function(section){
+      var stages = (section.getAttribute('data-flow-section') || '').split(/\s+/);
+      var visible = stages.includes(active.id);
+      section.classList.toggle('is-active-flow', visible);
+      section.hidden = !visible;
+    });
   }
 
   function finalSimText(){
@@ -1125,8 +1213,10 @@
   }
 
   function render(){
+    normalizeSimState();
     var m = metrics();
     renderInputs();
+    renderFlow();
     renderSim();
     renderGuide();
     renderPresets();
@@ -1145,6 +1235,7 @@
     if(linkedScene) {
       state.activeSimScene = linkedScene.id;
       state.activeSimTurn = 0;
+      state.activeFlowStage = 'learn';
       state.simMode = 'learn';
       state.simSelectedChoice = null;
       state.simFinished = false;
@@ -1292,6 +1383,12 @@
         return;
       }
 
+      var flowStage = event.target.closest('[data-flow-stage]');
+      if(flowStage) {
+        setFlowStage(flowStage.getAttribute('data-flow-stage'));
+        return;
+      }
+
       var station = event.target.closest('[data-station]');
       if(station) {
         setStation(station.getAttribute('data-station'));
@@ -1335,6 +1432,9 @@
   }
 
   function init(){
+    els.flowSteps = document.getElementById('np-flow-steps');
+    els.flowHint = document.getElementById('np-flow-hint');
+    els.flowSections = document.querySelectorAll('[data-flow-section]');
     els.presets = document.getElementById('np-presets');
     els.form = document.getElementById('np-form');
     els.compassLayer = document.getElementById('np-compass-layer');
@@ -1384,6 +1484,7 @@
       nextSimTurn: nextSimTurn,
       setSimTurn: setSimTurn,
       setSimMode: setSimMode,
+      setFlowStage: setFlowStage,
       guideProgress: guideProgress,
       setGuideStep: setGuideStep,
       applyPreset: applyPreset,

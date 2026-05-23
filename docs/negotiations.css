@@ -28,6 +28,10 @@
   cursor: pointer;
 }
 
+.np-page [hidden] {
+  display: none !important;
+}
+
 .np-topbar {
   position: sticky;
   top: 0;
@@ -186,6 +190,7 @@
 
 .np-panel,
 .np-map-panel,
+.np-flow,
 .np-sim,
 .np-guide,
 .np-drills,
@@ -233,6 +238,104 @@
   padding-inline: var(--ys-space-4);
   font-size: var(--ys-text-sm);
   white-space: nowrap;
+}
+
+.np-flow {
+  display: grid;
+  gap: var(--ys-space-5);
+  margin-bottom: var(--ys-space-5);
+  padding: var(--ys-space-5);
+}
+
+.np-flow-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ys-space-5);
+  align-items: end;
+}
+
+.np-flow h2 {
+  margin: 0;
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: var(--ys-text-xl);
+  line-height: var(--ys-line-tight);
+}
+
+.np-flow-head p:last-child {
+  max-width: 520px;
+  margin: 0;
+  color: var(--ys-color-text-muted);
+  text-align: right;
+}
+
+.np-flow-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ys-space-3);
+}
+
+.np-flow-step {
+  min-width: 0;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ys-space-3);
+  padding: var(--ys-space-3);
+  border: 1px solid var(--ys-color-border);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface);
+  color: var(--ys-color-text);
+  text-align: left;
+}
+
+.np-flow-step-num {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ys-color-surface-muted);
+  color: var(--ys-color-text-muted);
+  font-weight: 850;
+}
+
+.np-flow-step-copy strong,
+.np-flow-step-copy span {
+  display: block;
+}
+
+.np-flow-step-copy strong {
+  font-size: var(--ys-text-sm);
+  line-height: 1.2;
+}
+
+.np-flow-step-copy span,
+.np-flow-step-state {
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+}
+
+.np-flow-step-state {
+  font-weight: 850;
+}
+
+.np-flow-step.is-current {
+  border-color: var(--ys-color-accent);
+  background: var(--ys-color-accent-soft);
+}
+
+.np-flow-step.is-current .np-flow-step-num,
+.np-flow-step.is-unlocked:not(.is-current) .np-flow-step-num {
+  background: var(--ys-color-accent);
+  color: #fff;
+}
+
+.np-flow-step.is-locked {
+  opacity: .62;
+  cursor: not-allowed;
 }
 
 .np-sim {
@@ -1545,6 +1648,10 @@ html[data-yasna-theme='dark'] .np-compass-metric {
     grid-template-columns: 1fr;
   }
 
+  .np-flow-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .np-sim-scenes {
     justify-content: flex-start;
   }
@@ -1600,6 +1707,22 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 
   .np-sim {
     padding: var(--ys-space-4);
+  }
+
+  .np-flow {
+    padding: var(--ys-space-4);
+  }
+
+  .np-flow-head {
+    display: grid;
+  }
+
+  .np-flow-head p:last-child {
+    text-align: left;
+  }
+
+  .np-flow-steps {
+    grid-template-columns: 1fr;
   }
 
   .np-sim-head {
