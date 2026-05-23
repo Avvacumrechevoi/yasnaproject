@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  var STORAGE_KEY = 'yasna_negotiations_trainer_v3';
+  var STORAGE_KEY = 'yasna_negotiations_trainer_v4';
   var DRILL_KEY = 'yasna_negotiations_drill_v1';
 
   var stations = [
@@ -267,13 +267,13 @@
       turns: [
         {
           station: 1,
-          title: 'Вход: хочу / не хочу',
-          bLine: 'У меня мало времени. Коротко: почему мне вообще стоит это обсуждать?',
-          hint: 'Не убеждайте. Откройте маленькую проверку, в которой B сохраняет право быстро сказать "нет".',
+          title: 'Начать разговор',
+          bLine: 'У меня мало времени. Зачем мне сейчас это обсуждать?',
+          hint: 'Не продавайте. Предложите короткую проверку и оставьте B право быстро остановиться.',
           choices: [
-            { text: 'Давайте не продавать друг другу лишнее. За 10 минут проверим: что для вас будет хорошим проектом, где мы реально можем быть полезны и есть ли смысл продолжать. Если не совпадет - остановимся.', label: 'Проверить совпадение', effect: { resonance: 10, trust: 8, tension: -6 }, note: 'Вы открыли короткую проверку и сохранили B право не входить дальше.', lesson: 'Резонанс начинается не с аргумента, а с безопасного входа.' },
-            { text: 'У нас сильный проект, такие возможности редко бывают. Надо просто попробовать.', label: 'Сразу убеждать', effect: { resonance: -6, trust: -8, tension: 10 }, note: 'Вы начали доказывать ценность до того, как B согласился входить в разговор.', lesson: 'Если B еще не вошел, аргументы становятся шумом.' },
-            { text: 'Понимаю, тогда, наверное, лучше как-нибудь потом созвониться, когда будет удобнее.', label: 'Уйти в туман', effect: { resonance: -3, trust: -2, tension: 1 }, note: 'Вы не давите, но и не создаете понятной причины остаться в контакте.', lesson: 'Мягкость без формы не открывает переговоры.' }
+            { text: 'Давайте за 10 минут проверим одну вещь: где вам может быть полезен проект и есть ли смысл продолжать. Если не совпадет - спокойно остановимся.', label: 'Короткая проверка', effect: { resonance: 10, trust: 8, tension: -6 }, note: 'Хорошо: вы не давите и даете понятный формат.', lesson: 'Переговоры начинаются, когда B понимает: разговор короткий, ясный и его можно остановить.' },
+            { text: 'У нас сильный проект, такие возможности редко бывают. Надо просто попробовать.', label: 'Рано продавать', effect: { resonance: -6, trust: -8, tension: 10 }, note: 'Слишком рано: B еще не согласился слушать аргументы.', lesson: 'Пока нет входа в разговор, даже сильные аргументы звучат как давление.' },
+            { text: 'Понимаю. Тогда, наверное, лучше как-нибудь потом созвониться, когда будет удобнее.', label: 'Нет формы', effect: { resonance: -3, trust: -2, tension: 1 }, note: 'Мягко, но расплывчато: у B нет причины вернуться.', lesson: 'Вежливость помогает, но без конкретного следующего шага контакт быстро исчезает.' }
           ]
         },
         {
@@ -411,20 +411,20 @@
 
   var thinkingModels = {
     1: {
-      name: 'Урок 1. Вход: хочу / не хочу',
-      lens: 'Цель первого хода - не убедить B, а открыть право на разговор. Если B не видит безопасный короткий вход, дальше будут не переговоры, а сопротивление.',
-      observe: ['Есть ли у B ясный повод дать вам 5-10 минут?', 'Понимает ли B, что может быстро остановить разговор?', 'Вы предлагаете проверку совпадения или уже продаете решение?'],
-      skill: 'Сформулировать вход как маленькую честную проверку интереса B.',
-      why: 'Первые секунды решают, будет ли у встречи живое поле. Хороший вход не продает, не оправдывается и не отступает в туман. Он предлагает B безопасно проверить: есть ли здесь смысл разговаривать.',
-      principle: 'Формула входа: короткая рамка + критерий проверки + право остановиться.',
+      name: 'Начать разговор без давления',
+      lens: 'В первом ходе не нужно убеждать. Нужно получить право на короткий разговор.',
+      observe: ['B понимает, зачем дать вам 5-10 минут?', 'B видит, что может спокойно сказать "нет"?', 'Вы проверяете интерес, а не продаете заранее?'],
+      skill: 'Предложить короткую проверку вместо продажи.',
+      why: 'Первый ход отвечает только на один вопрос: стоит ли вообще говорить дальше. Если вход безопасный, B слушает. Если вход давит, B защищается.',
+      principle: 'Простая формула: время + критерий + право остановиться.',
       formula: [
-        { title: 'Снять давление', body: 'Не продаем вслепую и не требуем доверия заранее.' },
-        { title: 'Дать формат', body: 'Ограничиваем разговор 5-10 минутами и одним понятным критерием.' },
-        { title: 'Вернуть контроль B', body: 'Если совпадения нет, спокойно останавливаемся без осадка.' }
+        { title: 'Назвать время', body: 'Например: 5-10 минут.' },
+        { title: 'Назвать проверку', body: 'Что именно станет понятно после разговора.' },
+        { title: 'Оставить выход', body: 'Если не совпало - спокойно остановиться.' }
       ],
-      practiceCheck: ['В ответе есть короткий формат?', 'B понимает, что может сказать "нет"?', 'Вы проверяете интерес B, а не доказываете свою ценность?'],
+      practiceCheck: ['Есть ограничение по времени?', 'Понятно, что именно проверяем?', 'Есть спокойное право сказать "нет"?'],
       avoid: ['Доказывать, что проект сильный', 'Просить "просто попробовать"', 'Уходить в неопределенное "созвонимся потом"'],
-      takeaway: 'Хороший вход создает маленький договор о проверке. Только после него у аргументов появляется место.'
+      takeaway: 'Хороший вход - это маленький договор о проверке. После него уже можно говорить по сути.'
     },
     2: {
       name: 'Надежда до аргумента',
@@ -474,26 +474,26 @@
     {
       id: 'learn',
       title: 'Объяснение',
-      label: 'понять схему',
-      hint: 'Сначала смотрим на переговоры как на поле: A/B, время, тень, надежды и обмен.'
+      label: 'понять правило',
+      hint: 'Сначала поймите правило. Затем нажмите кнопку и попробуйте выбрать ход.'
     },
     {
       id: 'practice',
       title: 'Отработка',
-      label: 'сделать ход',
-      hint: 'Теперь выбираем ответ A и тренируем конкретный навык мышления.'
+      label: 'выбрать ответ',
+      hint: 'Теперь выберите первый ответ A. Лучше не угадывать, а проверить формулу: время, критерий, выход.'
     },
     {
       id: 'debrief',
       title: 'Разбор',
       label: 'увидеть последствия',
-      hint: 'После ответа смотрим, что произошло с резонансом, доверием и напряжением.'
+      hint: 'После ответа смотрим, почему ход сработал или где он создал сопротивление.'
     },
     {
       id: 'map',
       title: 'Карта',
-      label: 'собрать ситуацию',
-      hint: 'После первого хода можно открыть подробную подготовку, 12 фаз и упражнения.'
+      label: 'подготовить встречу',
+      hint: 'После первых ходов можно открыть подробную карту подготовки.'
     }
   ];
 
@@ -1006,7 +1006,7 @@
       : 'Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + ' · завершено ' + completed;
     els.courseProgressFill.style.width = progressPercent + '%';
     if(els.simTitle) els.simTitle.textContent = state.simFinished ? 'Курс завершен' : 'Урок ' + (Number(state.activeSimTurn) + 1) + '. ' + turn.title;
-    if(els.simKicker) els.simKicker.textContent = state.simFinished ? 'Финальный разбор' : 'Уровень: Core';
+    if(els.simKicker) els.simKicker.textContent = state.simFinished ? 'Финальный разбор' : 'Навык ' + (Number(state.activeSimTurn) + 1);
     els.simResonance.textContent = String(round(state.simScores.resonance));
     els.simTrust.textContent = String(round(state.simScores.trust));
     els.simTension.textContent = String(round(state.simScores.tension));
@@ -1043,10 +1043,10 @@
           '<section class="np-lesson-block' + (isCurrentLesson ? ' is-current' : ' is-complete') + '" data-lesson-index="' + lessonIndex + '">' +
             '<div class="np-sim-meta"><span>Урок ' + (lessonIndex + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + lessonTurn.station + ': ' + esc(stationById(lessonTurn.station).short) + '</span><span>' + status + '</span></div>' +
             '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'learn' : 'done-learn-' + lessonIndex) + '" data-testid="learning-mode">' +
-              '<div class="np-flow-block-head"><span class="np-flow-badge">1. Объяснение</span><strong>' + esc(lessonModel.name) + '</strong></div>' +
+              '<div class="np-flow-block-head"><span class="np-flow-badge">1. Понять</span><strong>' + esc(lessonModel.name) + '</strong></div>' +
               '<div class="np-mentor"><span class="np-mentor-avatar">Я</span><span><strong>Ясна</strong><small>методолог переговоров</small></span></div>' +
               '<div class="np-learning-card">' +
-                '<div><span class="np-sim-person">Что держать в голове</span><h3>' + esc(lessonModel.name) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
+                '<div><span class="np-sim-person">Главная мысль</span><h3>' + esc(lessonModel.name) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
                 renderMethodCard(lessonModel) +
                 '<div class="np-learning-grid">' +
                   '<div><strong>Наблюдать</strong><ul>' + lessonModel.observe.map(function(item){ return '<li>' + esc(item) + '</li>'; }).join('') + '</ul></div>' +
@@ -1054,15 +1054,15 @@
                   '<div><strong>Сейчас B скажет</strong><p>' + esc(lessonTurn.bLine) + '</p></div>' +
                 '</div>' +
               '</div>' +
-              (isCurrentLesson && !practiceVisible ? '<div class="np-flow-block-actions"><button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-start-practice">Далее: к отработке</button></div>' : '') +
+              (isCurrentLesson && !practiceVisible ? '<div class="np-flow-block-actions"><button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-start-practice">Дальше: попробовать</button></div>' : '') +
             '</div>' +
             (practiceVisible ? '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'practice' : 'done-practice-' + lessonIndex) + '" data-testid="practice-mode">' +
-              '<div class="np-flow-block-head"><span class="np-flow-badge">2. Тренажер</span><strong>' + esc(lessonModel.skill) + '</strong></div>' +
+              '<div class="np-flow-block-head"><span class="np-flow-badge">2. Попробовать</span><strong>' + esc(lessonModel.skill) + '</strong></div>' +
               '<div class="np-mentor"><span class="np-mentor-avatar np-mentor-avatar--b">B</span><span><strong>Собеседник</strong><small>сейчас проверяет вход</small></span></div>' +
               '<div class="np-course-lesson"><span>Мысленная задача</span><h3>' + esc(lessonModel.skill) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
               renderPracticeCheck(lessonModel) +
               '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(lessonTurn.bLine) + '</p><p class="np-sim-hint">' + esc(lessonTurn.hint) + '</p></div>' +
-              '<div class="np-sim-practice-label">Практика: выберите ответ A</div>' +
+              '<div class="np-sim-practice-label">Выберите лучший первый ход</div>' +
               '<div class="np-sim-choices">' + lessonTurn.choices.map(function(choice, choiceIndex){
                 var canAnswer = isCurrentLesson && !state.simFinished;
                 return '<button class="np-sim-choice' + (Number(lessonChoiceIndex) === choiceIndex ? ' is-selected' : '') + '" type="button" ' + (canAnswer ? 'data-sim-choice="' + choiceIndex + '"' : 'disabled aria-disabled="true"') + '>' +
@@ -1070,7 +1070,7 @@
               }).join('') + '</div>' +
             '</div>' : '') +
             (debriefVisible ? '<div class="np-flow-block np-flow-block--debrief" data-flow-block="' + (isCurrentLesson ? 'debrief' : 'done-debrief-' + lessonIndex) + '" data-testid="debrief-mode">' +
-              '<div class="np-flow-block-head"><span class="np-flow-badge">3. Разбор</span><strong>Что произошло с переговорами</strong></div>' +
+              '<div class="np-flow-block-head"><span class="np-flow-badge">3. Разбор</span><strong>Что произошло</strong></div>' +
               '<div class="np-sim-feedback"><strong>' + esc(lessonChoice.note) + '</strong><p>' + esc(lessonChoice.lesson) + '</p></div>' +
               renderMethodTakeaway(lessonModel) +
               '<div class="np-result-grid">' +
@@ -1078,7 +1078,7 @@
                 '<div><span>Доверие</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.trust) || state.simScores.trust) + '</strong></div>' +
                 '<div><span>Напряжение</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.tension) || state.simScores.tension) + '</strong></div>' +
               '</div>' +
-              (isCurrentLesson ? '<div class="np-flow-block-actions"><button class="ys-button np-mini-button" type="button" data-action="flow-open-map">Открыть карту ниже</button><button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-next">' + (lessonIndex >= scene.turns.length - 1 ? 'Завершить курс' : 'Далее: следующий урок') + '</button></div>' : '') +
+              (isCurrentLesson ? '<div class="np-flow-block-actions"><button class="ys-button np-mini-button" type="button" data-action="flow-open-map">Открыть карту</button><button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-next">' + (lessonIndex >= scene.turns.length - 1 ? 'Завершить курс' : 'Следующий урок') + '</button></div>' : '') +
             '</div>' : '') +
           '</section>'
         );
@@ -1111,7 +1111,7 @@
     var completed = completedSimTurns(scene);
     var progressPercent = state.simFinished ? 100 : Math.round(completed / scene.turns.length * 100);
     if(els.flowProgressLabel) {
-      els.flowProgressLabel.textContent = 'Общий прогресс: ' + (state.simFinished ? scene.turns.length : completed) + '/' + scene.turns.length + ' - ' + progressPercent + '%';
+      els.flowProgressLabel.textContent = 'Прогресс: ' + (state.simFinished ? scene.turns.length : completed) + ' из ' + scene.turns.length + ' уроков';
     }
     if(els.flowProgressFill) els.flowProgressFill.style.width = progressPercent + '%';
     els.flowHint.textContent = active.hint;

@@ -198,22 +198,22 @@ test.describe('Тренажёр переговоров', () => {
     await page.waitForFunction(() => !!window.YasnaNegotiationsTrainer, { timeout: 10_000 });
     await page.evaluate(() => window.YasnaNegotiationsTrainer.applyPreset('hiring'));
 
-    await expect(page.getByRole('heading', { name: /Переговоры Ясны/ })).toBeVisible();
-    await expect(page.getByTestId('sequence-flow')).toContainText(/Последовательная подача/);
-    await expect(page.getByTestId('sequence-flow')).toContainText(/Общий прогресс: 0\/6 - 0%/);
-    await expect(page.getByTestId('simulator-mode')).toContainText(/Урок 1\. Вход/);
-    await expect(page.getByTestId('simulator-mode')).toContainText(/Уровень: Core/);
-    await expect(page.getByTestId('learning-mode')).toContainText(/Что держать в голове/);
-    await expect(page.getByTestId('learning-mode')).toContainText(/Формула входа/);
+    await expect(page.getByRole('heading', { name: /Тренажер переговоров/ })).toBeVisible();
+    await expect(page.getByTestId('sequence-flow')).toContainText(/Урок 1 из 6/);
+    await expect(page.getByTestId('sequence-flow')).toContainText(/Прогресс: 0 из 6 уроков/);
+    await expect(page.getByTestId('simulator-mode')).toContainText(/Урок 1\. Начать разговор/);
+    await expect(page.getByTestId('simulator-mode')).toContainText(/Навык 1/);
+    await expect(page.getByTestId('learning-mode')).toContainText(/Главная мысль/);
+    await expect(page.getByTestId('learning-mode')).toContainText(/Простая формула/);
     await expect(page.getByTestId('guide-mode')).toBeHidden();
-    await expect(page.locator('#np-flow-progress-label')).toContainText(/0\/6 - 0%/);
+    await expect(page.locator('#np-flow-progress-label')).toContainText(/0 из 6 уроков/);
     await expect(page.locator('[data-sim-turn="2"]')).toBeDisabled();
     await page.locator('[data-flow-block="learn"] [data-action="sim-start-practice"]').click();
     await page.locator('[data-sim-choice="0"]').click();
-    await expect(page.getByTestId('simulator-mode')).toContainText(/Резонанс начинается/);
+    await expect(page.getByTestId('simulator-mode')).toContainText(/Хорошо: вы не давите/);
     await expect(page.locator('[data-flow-block="debrief"] [data-action="sim-next"]')).toBeEnabled();
     await page.locator('[data-flow-block="debrief"] [data-action="sim-next"]').click();
-    await expect(page.locator('#np-flow-progress-label')).toContainText(/1\/6 - 17%/);
+    await expect(page.locator('#np-flow-progress-label')).toContainText(/1 из 6 уроков/);
     await expect(page.locator('[data-sim-turn="1"]')).toBeEnabled();
 
     const simSnapshot = await page.evaluate(() => ({
