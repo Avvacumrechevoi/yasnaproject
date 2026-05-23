@@ -18,8 +18,8 @@
 <meta name="yasna:api" content=""/>
 <meta name="yasna:tg-bot" content=""/>
 <meta name="yasna:theme" content="light"/>
-<link rel="stylesheet" href="design-system.css?v=1"/>
-<link rel="stylesheet" href="negotiations.css?v=4"/>
+<link rel="stylesheet" href="design-system.css?v=2"/>
+<link rel="stylesheet" href="negotiations.css?v=5"/>
 </head>
 <body class="np-page">
 <header class="np-topbar">
@@ -39,9 +39,9 @@
 <main class="np-shell" id="negotiations-trainer">
   <section class="np-context" aria-labelledby="np-title">
     <div>
-      <p class="np-kicker">Последовательный практикум</p>
+      <p class="np-kicker">Тренажер мышления</p>
       <h1 id="np-title">Тренажер переговоров Ясны</h1>
-      <p class="np-lead">Проходите урок за уроком: короткая теория, реплика B, выбор ответа, разбор последствий и следующий шаг.</p>
+      <p class="np-lead">Сначала учимся видеть поле переговоров: время, тень, надежды, дать/взять и 3-9. Потом отрабатываем навык на репликах B.</p>
     </div>
     <div class="np-context-facts" aria-label="Опоры методики">
       <span>Две встречные Ясны</span>
@@ -55,11 +55,15 @@
     <div class="np-sim-main">
       <div class="np-sim-head">
         <div>
-          <p class="np-section-kicker">Практикум по шагам</p>
+          <p class="np-section-kicker">Обучение → тренировка</p>
           <h2 id="np-sim-title">Симулятор встречи</h2>
         </div>
         <div class="np-sim-scenes" id="np-sim-scenes" role="group" aria-label="Сценарии симулятора"></div>
       </div>
+
+      <div class="np-mode-tabs" id="np-sim-mode" role="tablist" aria-label="Режим тренажера мышления"></div>
+
+      <div class="np-thinking-map" id="np-thinking-map" data-testid="thinking-map" aria-label="Карта мышления переговоров"></div>
 
       <div class="np-course-progress" aria-label="Прогресс курса">
         <span id="np-course-progress-label">Урок 1 из 6</span>
@@ -78,6 +82,7 @@
 
       <div class="np-sim-actions">
         <button class="ys-button np-mini-button" type="button" data-action="sim-restart">Начать заново</button>
+        <button class="ys-button np-mini-button" type="button" data-action="sim-start-practice" id="np-sim-practice">Перейти к отработке</button>
         <button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-next" id="np-sim-next">Следующий урок</button>
       </div>
     </div>
@@ -295,6 +300,6 @@
 </script>
 <script src="core/env.js?v=1"></script>
 <script src="core/theme.js?v=1"></script>
-<script src="negotiations.js?v=4"></script>
+<script src="negotiations.js?v=5"></script>
 </body>
 </html>

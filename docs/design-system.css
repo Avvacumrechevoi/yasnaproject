@@ -134,13 +134,18 @@ html[data-yasna-theme='dark'] body {
   background: var(--ys-color-surface-muted);
 }
 
+.ys-button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
 .ys-button--primary {
   background: var(--ys-color-accent);
   border-color: var(--ys-color-accent);
   color: #fff;
 }
 
-.ys-button--primary:hover {
+.ys-button--primary:hover:not(:disabled) {
   background: var(--ys-color-accent-hover);
   border-color: var(--ys-color-accent-hover);
 }

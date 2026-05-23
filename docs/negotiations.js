@@ -383,6 +383,7 @@
     activeGuideStep: 0,
     activeSimScene: 'hiring',
     activeSimTurn: 0,
+    simMode: 'learn',
     simSelectedChoice: null,
     simFinished: false,
     simScores: { resonance: 52, trust: 54, tension: 42 },
@@ -403,6 +404,57 @@
     fairness: 50,
     atmosphere: 60,
     hiddenRisk: 40
+  };
+
+  var thinkingModels = {
+    1: {
+      name: 'Вход без давления',
+      lens: 'Сначала понять, есть ли у B "хочу". Если входа нет, фразы превращаются в шум.',
+      observe: ['Есть ли право быстро отказаться?', 'Короткий ли формат?', 'Не покупаете ли вы внимание давлением?'],
+      skill: 'Открыть встречу так, чтобы B сохранил контроль над входом.'
+    },
+    2: {
+      name: 'Надежда до аргумента',
+      lens: 'До предложения надо услышать, что B хочет взять: выгоду, статус, спокойствие, рост или удовольствие.',
+      observe: ['Какая надежда звучит явно?', 'Что может быть скрытой тенью?', 'Как не свести B только к цене?'],
+      skill: 'Назвать надежду B и не подменить ее своим аргументом.'
+    },
+    3: {
+      name: 'Позиция A без тумана',
+      lens: 'A должен понимать, что берет, что дает и зачем встреча вообще нужна.',
+      observe: ['Что A хочет взять?', 'Что A реально дает?', 'Можно ли сказать позицию одним честным предложением?'],
+      skill: 'Сформулировать ясную позицию без общего обещания.'
+    },
+    4: {
+      name: 'Резонанс и атмосфера',
+      lens: 'Резонанс появляется, когда стороны нашли общие обстоятельства, язык и темп.',
+      observe: ['Где есть общее поле?', 'Что в атмосфере мешает слышать?', 'Какой маленький тест покажет совпадение?'],
+      skill: 'Сузить разговор до критерия B и общей зоны.'
+    },
+    5: {
+      name: 'Ограничения как проверка',
+      lens: 'Ограничения не надо продавливать. Их надо превратить в честный контр-вариант.',
+      observe: ['Какой риск реальный?', 'Что нельзя обещать?', 'Как сохранить обмен равновесным?'],
+      skill: 'Предложить маленькую проверку вместо спора или скидки.'
+    },
+    6: {
+      name: 'Ось 3-9',
+      lens: 'Противоречие надо увидеть и назвать: A хочет одно, B хочет другое, решение ищется по линии единства.',
+      observe: ['Где предметный конфликт?', 'Где статусный конфликт?', 'Что можно признать без сдачи позиции?'],
+      skill: 'Назвать противоречие без нападения.'
+    },
+    7: {
+      name: 'Веревка веры',
+      lens: 'Надежда B должна быть связана с реальной способностью A. Иначе вера не выдержит.',
+      observe: ['Какая надежда требует доказательства?', 'Что A может подтвердить фактом?', 'Какую маленькую проверку можно дать?'],
+      skill: 'Связать обещание с проверяемым действием.'
+    },
+    11: {
+      name: 'Итог без осадка',
+      lens: 'Результат должен оставлять историю, а не пепел и золу: успех, отказ или перенос должны быть равновесными.',
+      observe: ['Что изменилось после встречи?', 'Какой следующий шаг честен?', 'Что B вспомнит через неделю?'],
+      skill: 'Закрыть встречу так, чтобы следующий цикл оставался возможным.'
+    }
   };
 
   var state = loadState();
@@ -605,6 +657,22 @@
     return scene.turns[clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1)] || scene.turns[0];
   }
 
+  function thinkingModelForTurn(turn){
+    return thinkingModels[turn.station] || {
+      name: stationById(turn.station).title,
+      lens: stationById(turn.station).body,
+      observe: stationById(turn.station).prompts,
+      skill: 'Увидеть параметр встречи до выбора переговорного действия.'
+    };
+  }
+
+  function simStage(){
+    if(state.simFinished) return 'final';
+    if(state.simMode === 'learn') return 'learn';
+    if(state.simSelectedChoice != null) return 'debrief';
+    return 'practice';
+  }
+
   function simChoiceIndex(scene, turnIndex){
     var entry = state.simHistory[turnIndex];
     var turn = scene.turns[turnIndex];
@@ -646,6 +714,7 @@
     var scene = simSceneById(state.activeSimScene || defaults.activeSimScene);
     state.activeSimScene = scene.id;
     state.activeSimTurn = clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1);
+    state.simMode = state.simMode === 'practice' ? 'practice' : 'learn';
     state.simSelectedChoice = state.simSelectedChoice == null ? null : Number(state.simSelectedChoice);
     state.simScores = Object.assign({}, scene.startScores, state.simScores || {});
     state.simHistory = Array.isArray(state.simHistory) ? state.simHistory : [];
@@ -680,6 +749,7 @@
     state.simFinished = false;
     state.simScores = Object.assign({}, scene.startScores);
     state.simHistory = [];
+    state.simMode = 'learn';
     var linked = presets.find(function(preset){ return preset.id === scene.preset; });
     if(linked) state = Object.assign({}, state, linked.values, { preset: linked.id });
     state.activeStation = scene.turns[0].station;
@@ -695,6 +765,7 @@
     if(!choice || state.simFinished) return;
     state.simSelectedChoice = Number(index);
     state.activeStation = turn.station;
+    state.simMode = 'practice';
     state.simHistory[state.activeSimTurn] = {
       turn: turn.title,
       choice: choice.label,
@@ -719,6 +790,7 @@
     state.simFinished = false;
     state.activeSimTurn = next;
     state.simSelectedChoice = simChoiceIndex(scene, next);
+    state.simMode = state.simSelectedChoice == null ? 'learn' : 'practice';
     state.activeStation = currentSimTurn().station;
     recomputeSimScores();
     syncSimToDiagnostics();
@@ -739,6 +811,7 @@
     }
     state.activeSimTurn = Number(state.activeSimTurn) + 1;
     state.simSelectedChoice = simChoiceIndex(scene, state.activeSimTurn);
+    state.simMode = state.simSelectedChoice == null ? 'learn' : 'practice';
     state.activeStation = currentSimTurn().station;
     recomputeSimScores();
     syncSimToDiagnostics();
@@ -748,6 +821,17 @@
   function restartSim(){
     setSimScene(state.activeSimScene);
     showToast('Симуляция начата заново');
+  }
+
+  function setSimMode(mode){
+    if(state.simFinished) return;
+    state.simMode = mode === 'practice' ? 'practice' : 'learn';
+    render();
+  }
+
+  function startSimPractice(){
+    setSimMode('practice');
+    showToast('Теперь отрабатываем навык');
   }
 
   function renderSim(){
@@ -760,10 +844,24 @@
     var completed = completedSimTurns(scene);
     var progressPercent = state.simFinished ? 100 : Math.round(completed / scene.turns.length * 100);
     var unlocked = maxUnlockedSimTurn(scene);
+    var model = thinkingModelForTurn(turn);
+    var stage = simStage();
 
     els.simScenes.innerHTML = simScenes.map(function(sceneItem){
       return '<button class="np-sim-scene" type="button" data-sim-scene="' + sceneItem.id + '" aria-pressed="' + (sceneItem.id === scene.id ? 'true' : 'false') + '">' + esc(sceneItem.title) + '</button>';
     }).join('');
+    els.simMode.innerHTML =
+      '<button class="np-mode-tab" type="button" role="tab" data-sim-mode="learn" aria-selected="' + (stage === 'learn' ? 'true' : 'false') + '"><strong>1. Объяснение</strong><span>понять схему</span></button>' +
+      '<button class="np-mode-tab" type="button" role="tab" data-sim-mode="practice" aria-selected="' + (stage !== 'learn' ? 'true' : 'false') + '"><strong>2. Тренажер</strong><span>сделать ход</span></button>';
+    els.thinkingMap.innerHTML =
+      '<div class="np-thinking-axis np-thinking-axis--time"><span>будущее: надежды</span><span>прошлое: осадок</span></div>' +
+      '<div class="np-thinking-axis np-thinking-axis--shadow"><span>явь: сказано</span><span>тень: скрыто</span></div>' +
+      '<div class="np-thinking-core">' +
+        '<span class="np-thinking-side">A<br/><small>дать / взять</small></span>' +
+        '<strong>' + esc(model.name) + '</strong>' +
+        '<span class="np-thinking-side">B<br/><small>взять / поверить</small></span>' +
+      '</div>' +
+      '<div class="np-thinking-focus"><span>Фокус мышления</span><p>' + esc(model.lens) + '</p></div>';
     els.courseProgressLabel.textContent = state.simFinished
       ? 'Курс завершен: ' + scene.turns.length + ' из ' + scene.turns.length
       : 'Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + ' · завершено ' + completed;
@@ -771,6 +869,9 @@
     els.simResonance.textContent = String(round(state.simScores.resonance));
     els.simTrust.textContent = String(round(state.simScores.trust));
     els.simTension.textContent = String(round(state.simScores.tension));
+    if(els.simPractice) {
+      els.simPractice.hidden = state.simFinished || stage !== 'learn';
+    }
     if(els.simNext) {
       els.simNext.disabled = state.simFinished || state.simSelectedChoice == null;
       els.simNext.textContent = state.simFinished
@@ -783,10 +884,22 @@
         '<div class="np-sim-meta"><span>Финал</span><span>' + esc(scene.title) + '</span><span>Фаза 11: Итог</span></div>' +
         '<div class="np-sim-dialog"><span class="np-sim-person">Разбор</span><p class="np-sim-line">' + esc(finalText.title) + '</p><p class="np-sim-hint">' + esc(finalText.body) + '</p></div>' +
         '<div class="np-sim-feedback"><strong>Следующая тренировка</strong><p>' + esc(finalText.next) + '</p></div>';
+    } else if(stage === 'learn') {
+      els.simCard.innerHTML =
+        '<div class="np-sim-meta"><span>Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>Режим объяснения</span></div>' +
+        '<div class="np-learning-card" data-testid="learning-mode">' +
+          '<div><span class="np-sim-person">Что держать в голове</span><h3>' + esc(model.name) + '</h3><p>' + esc(model.lens) + '</p></div>' +
+          '<div class="np-learning-grid">' +
+            '<div><strong>Наблюдать</strong><ul>' + model.observe.map(function(item){ return '<li>' + esc(item) + '</li>'; }).join('') + '</ul></div>' +
+            '<div><strong>Навык</strong><p>' + esc(model.skill) + '</p></div>' +
+            '<div><strong>Сейчас B скажет</strong><p>' + esc(turn.bLine) + '</p></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="np-sim-feedback"><strong>Как пользоваться</strong><p>Сначала проговорите, какой параметр вы видите. Потом переходите в тренажер и выберите ответ A.</p></div>';
     } else {
       els.simCard.innerHTML =
-        '<div class="np-sim-meta"><span>Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>' + esc(turn.title) + '</span></div>' +
-        '<div class="np-course-lesson"><span>Короткий урок</span><h3>' + esc(turn.title) + '</h3><p>' + esc(stationById(turn.station).body) + '</p></div>' +
+        '<div class="np-sim-meta"><span>Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>Режим тренажера</span></div>' +
+        '<div class="np-course-lesson"><span>Мысленная задача</span><h3>' + esc(model.skill) + '</h3><p>' + esc(model.lens) + '</p></div>' +
         '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(turn.bLine) + '</p><p class="np-sim-hint">' + esc(turn.hint) + '</p></div>' +
         '<div class="np-sim-practice-label">Практика: выберите ответ A</div>' +
         '<div class="np-sim-choices">' + turn.choices.map(function(choice, index){
@@ -800,10 +913,11 @@
       var done = index < Number(state.activeSimTurn) || (index === Number(state.activeSimTurn) && state.simSelectedChoice != null) || state.simFinished;
       var current = index === Number(state.activeSimTurn) && !state.simFinished;
       var locked = index > unlocked && !state.simFinished;
+      var status = locked ? 'Закрыт' : (done ? 'Навык' : (stage === 'learn' && current ? 'Объяснение' : 'Тренировка'));
       return '<button class="np-sim-turn' + (done ? ' is-done' : '') + (current ? ' is-current' : '') + (locked ? ' is-locked' : '') + '" type="button" data-sim-turn="' + index + '" ' + (locked ? 'disabled aria-disabled="true"' : '') + '>' +
         '<span class="np-sim-turn-num">' + (index + 1) + '</span>' +
         '<span><strong>' + esc(item.title) + '</strong><span>Урок · фаза ' + item.station + '</span></span>' +
-        '<span class="np-sim-turn-state">' + (done ? 'OK' : (locked ? 'Закрыт' : 'Сейчас')) + '</span>' +
+        '<span class="np-sim-turn-state">' + esc(status) + '</span>' +
       '</button>';
     }).join('');
 
@@ -1031,6 +1145,7 @@
     if(linkedScene) {
       state.activeSimScene = linkedScene.id;
       state.activeSimTurn = 0;
+      state.simMode = 'learn';
       state.simSelectedChoice = null;
       state.simFinished = false;
       state.simScores = Object.assign({}, linkedScene.startScores);
@@ -1165,6 +1280,12 @@
         return;
       }
 
+      var simMode = event.target.closest('[data-sim-mode]');
+      if(simMode) {
+        setSimMode(simMode.getAttribute('data-sim-mode'));
+        return;
+      }
+
       var simTurn = event.target.closest('[data-sim-turn]');
       if(simTurn) {
         setSimTurn(simTurn.getAttribute('data-sim-turn'));
@@ -1197,6 +1318,7 @@
       if(name === 'focus-recommended') focusRecommended();
       if(name === 'copy-brief') copyBrief();
       if(name === 'sim-restart') restartSim();
+      if(name === 'sim-start-practice') startSimPractice();
       if(name === 'sim-next') nextSimTurn();
       if(name === 'guide-prev') setGuideStep(Number(state.activeGuideStep) - 1, { scroll: true });
       if(name === 'guide-next') setGuideStep(Number(state.activeGuideStep) + 1, { scroll: true });
@@ -1226,6 +1348,8 @@
     els.resonance = document.getElementById('np-resonance');
     els.desonance = document.getElementById('np-desonance');
     els.simScenes = document.getElementById('np-sim-scenes');
+    els.simMode = document.getElementById('np-sim-mode');
+    els.thinkingMap = document.getElementById('np-thinking-map');
     els.simCard = document.getElementById('np-sim-card');
     els.simResonance = document.getElementById('np-sim-resonance');
     els.simTrust = document.getElementById('np-sim-trust');
@@ -1234,6 +1358,7 @@
     els.simLog = document.getElementById('np-sim-log');
     els.courseProgressLabel = document.getElementById('np-course-progress-label');
     els.courseProgressFill = document.getElementById('np-course-progress-fill');
+    els.simPractice = document.getElementById('np-sim-practice');
     els.simNext = document.getElementById('np-sim-next');
     els.guideCard = document.getElementById('np-guide-card');
     els.guideRail = document.getElementById('np-guide-rail');
@@ -1258,6 +1383,7 @@
       selectSimChoice: selectSimChoice,
       nextSimTurn: nextSimTurn,
       setSimTurn: setSimTurn,
+      setSimMode: setSimMode,
       guideProgress: guideProgress,
       setGuideStep: setGuideStep,
       applyPreset: applyPreset,

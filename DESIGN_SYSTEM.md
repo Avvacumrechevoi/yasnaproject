@@ -60,7 +60,7 @@ The negotiations trainer introduces a reusable workbench pattern for dense tools
 
 | Area | Purpose | Tokens |
 | --- | --- | --- |
-| Simulator course | Sequential first-screen lessons, gated practice, decisions and consequences | `--ys-color-surface`, `--ys-color-accent`, semantic status colors |
+| Thinking trainer | Explanation mode, visual mental map, then gated skill practice | `--ys-color-surface`, `--ys-color-accent`, semantic status colors |
 | Input panel | Scenario capture and presets | `--ys-color-surface-raised`, `--ys-color-border-soft`, `--ys-space-*` |
 | Step guide | Progressive learning and task flow | `--ys-color-surface`, `--ys-color-accent`, status colors |
 | Central map | Primary interactive diagram | `--ys-color-surface`, `--ys-color-accent`, semantic status colors |
