@@ -618,6 +618,99 @@
   background: var(--ys-color-surface);
 }
 
+.np-lesson-feed {
+  display: grid;
+  gap: var(--ys-space-6);
+}
+
+.np-lesson-block {
+  display: grid;
+  gap: var(--ys-space-4);
+  padding: 0 0 var(--ys-space-5);
+  border-bottom: 1px solid var(--ys-color-border-soft);
+}
+
+.np-lesson-block:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.np-lesson-block.is-current {
+  scroll-margin-top: 96px;
+}
+
+.np-flow-block {
+  display: grid;
+  gap: var(--ys-space-4);
+  padding-left: var(--ys-space-4);
+  border-left: 4px solid var(--ys-color-accent);
+  scroll-margin-top: 96px;
+}
+
+.np-flow-block--debrief {
+  border-left-color: var(--ys-color-success);
+}
+
+.np-flow-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ys-space-3);
+}
+
+.np-flow-block-head strong {
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: var(--ys-text-md);
+  line-height: var(--ys-line-tight);
+}
+
+.np-flow-badge {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--ys-space-3);
+  border-radius: var(--ys-radius-sm);
+  background: var(--ys-color-accent-soft);
+  color: var(--ys-color-accent-hover);
+  font-size: var(--ys-text-xs);
+  font-weight: 850;
+}
+
+.np-flow-block-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ys-space-3);
+}
+
+.np-result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ys-space-3);
+}
+
+.np-result-grid div {
+  display: grid;
+  gap: var(--ys-space-2);
+  min-height: 82px;
+  padding: var(--ys-space-4);
+  border: 1px solid var(--ys-color-border-soft);
+  border-radius: var(--ys-radius-md);
+  background: var(--ys-color-surface-muted);
+}
+
+.np-result-grid span {
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-xs);
+  font-weight: 800;
+}
+
+.np-result-grid strong {
+  color: var(--ys-color-text);
+  font-size: 24px;
+  line-height: 1;
+}
+
 .np-course-lesson {
   display: grid;
   gap: var(--ys-space-2);
@@ -1700,6 +1793,7 @@ html[data-yasna-theme='dark'] .np-compass-metric {
 
   .np-score-strip,
   .np-sim-score,
+  .np-result-grid,
   .np-slider-pack,
   .np-two-cols {
     grid-template-columns: 1fr;

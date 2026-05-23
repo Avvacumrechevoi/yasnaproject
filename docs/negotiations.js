@@ -384,6 +384,8 @@
     activeSimScene: 'hiring',
     activeSimTurn: 0,
     activeFlowStage: 'learn',
+    flowDepth: 0,
+    flowMapRevealed: false,
     simMode: 'learn',
     simSelectedChoice: null,
     simFinished: false,
@@ -689,11 +691,22 @@
     return flowStages.find(function(stage){ return stage.id === id; }) || flowStages[0];
   }
 
+  function flowStageIndex(id){
+    var index = flowStages.findIndex(function(stage){ return stage.id === id; });
+    return index < 0 ? 0 : index;
+  }
+
+  function currentFlowDepth(){
+    var depth = Number(state.flowDepth || 0);
+    if(!Number.isFinite(depth)) depth = 0;
+    return clamp(depth, 0, flowStageIndex('debrief'));
+  }
+
   function isFlowStageUnlocked(id){
-    if(id === 'learn' || id === 'practice') return true;
-    if(id === 'debrief') return state.simSelectedChoice != null || state.simFinished;
-    if(id === 'map') return completedSimTurns(currentSimScene()) > 0 || state.simFinished;
-    return false;
+    if(id === 'map') {
+      return !!state.flowMapRevealed || completedSimTurns(currentSimScene()) > 0 || state.simFinished;
+    }
+    return flowStageIndex(id) <= currentFlowDepth();
   }
 
   function syncFlowToSim(){
@@ -713,8 +726,8 @@
 
   function simStage(){
     if(state.simFinished) return 'final';
-    if(state.simMode === 'learn') return 'learn';
-    if(state.simSelectedChoice != null) return 'debrief';
+    if(currentFlowDepth() < flowStageIndex('practice')) return 'learn';
+    if(state.simSelectedChoice != null && currentFlowDepth() >= flowStageIndex('debrief')) return 'debrief';
     return 'practice';
   }
 
@@ -759,11 +772,16 @@
     var scene = simSceneById(state.activeSimScene || defaults.activeSimScene);
     state.activeSimScene = scene.id;
     state.activeSimTurn = clamp(Number(state.activeSimTurn || 0), 0, scene.turns.length - 1);
+    state.simSelectedChoice = state.simSelectedChoice == null ? null : Number(state.simSelectedChoice);
+    if(state.simSelectedChoice != null && !Number.isFinite(state.simSelectedChoice)) state.simSelectedChoice = null;
+    state.flowDepth = currentFlowDepth();
+    state.flowMapRevealed = !!state.flowMapRevealed;
+    if(state.simSelectedChoice != null) state.flowDepth = Math.max(state.flowDepth, flowStageIndex('debrief'));
     state.simMode = state.simMode === 'practice' ? 'practice' : 'learn';
     state.activeFlowStage = flowStageById(state.activeFlowStage).id;
-    if(!isFlowStageUnlocked(state.activeFlowStage)) state.activeFlowStage = state.simSelectedChoice == null ? 'learn' : 'debrief';
+    if(state.activeFlowStage === 'map' && isFlowStageUnlocked('map')) state.flowMapRevealed = true;
+    if(!isFlowStageUnlocked(state.activeFlowStage)) state.activeFlowStage = flowStages[currentFlowDepth()].id;
     syncFlowToSim();
-    state.simSelectedChoice = state.simSelectedChoice == null ? null : Number(state.simSelectedChoice);
     state.simScores = Object.assign({}, scene.startScores, state.simScores || {});
     state.simHistory = Array.isArray(state.simHistory) ? state.simHistory : [];
     state.simHistory = state.simHistory.slice(0, scene.turns.length).map(function(entry, index){
@@ -799,6 +817,8 @@
     state.simHistory = [];
     state.simMode = 'learn';
     state.activeFlowStage = 'learn';
+    state.flowDepth = 0;
+    state.flowMapRevealed = false;
     var linked = presets.find(function(preset){ return preset.id === scene.preset; });
     if(linked) state = Object.assign({}, state, linked.values, { preset: linked.id });
     state.activeStation = scene.turns[0].station;
@@ -816,6 +836,7 @@
     state.activeStation = turn.station;
     state.simMode = 'practice';
     state.activeFlowStage = 'debrief';
+    state.flowDepth = Math.max(currentFlowDepth(), flowStageIndex('debrief'));
     state.simHistory[state.activeSimTurn] = {
       turn: turn.title,
       choice: choice.label,
@@ -827,6 +848,7 @@
     state.simHistory[state.activeSimTurn].scores = Object.assign({}, state.simScores);
     syncSimToDiagnostics();
     render();
+    scrollFlowStage('debrief');
   }
 
   function setSimTurn(index){
@@ -840,12 +862,14 @@
     state.simFinished = false;
     state.activeSimTurn = next;
     state.simSelectedChoice = simChoiceIndex(scene, next);
+    state.flowDepth = state.simSelectedChoice == null ? 0 : flowStageIndex('debrief');
     state.simMode = state.simSelectedChoice == null ? 'learn' : 'practice';
     state.activeFlowStage = state.simSelectedChoice == null ? 'learn' : 'debrief';
     state.activeStation = currentSimTurn().station;
     recomputeSimScores();
     syncSimToDiagnostics();
     render();
+    scrollFlowStage(state.activeFlowStage);
   }
 
   function nextSimTurn(){
@@ -857,17 +881,21 @@
     }
     if(Number(state.activeSimTurn) >= scene.turns.length - 1) {
       state.simFinished = true;
+      state.flowMapRevealed = true;
+      state.activeFlowStage = 'map';
       render();
       return;
     }
     state.activeSimTurn = Number(state.activeSimTurn) + 1;
     state.simSelectedChoice = simChoiceIndex(scene, state.activeSimTurn);
+    state.flowDepth = state.simSelectedChoice == null ? 0 : flowStageIndex('debrief');
     state.simMode = state.simSelectedChoice == null ? 'learn' : 'practice';
     state.activeFlowStage = state.simSelectedChoice == null ? 'learn' : 'debrief';
     state.activeStation = currentSimTurn().station;
     recomputeSimScores();
     syncSimToDiagnostics();
     render();
+    scrollFlowStage(state.activeFlowStage);
   }
 
   function restartSim(){
@@ -877,18 +905,53 @@
 
   function setSimMode(mode){
     if(state.simFinished) return;
-    state.simMode = mode === 'practice' ? 'practice' : 'learn';
-    state.activeFlowStage = state.simMode === 'practice' ? 'practice' : 'learn';
+    if(mode === 'practice') {
+      startSimPractice();
+      return;
+    }
+    state.simMode = 'learn';
+    state.activeFlowStage = 'learn';
     render();
+    scrollFlowStage('learn');
   }
 
   function startSimPractice(){
-    setSimMode('practice');
+    if(state.simFinished) return;
+    state.simMode = 'practice';
+    state.activeFlowStage = 'practice';
+    state.flowDepth = Math.max(currentFlowDepth(), flowStageIndex('practice'));
+    render();
+    scrollFlowStage('practice');
     showToast('Теперь отрабатываем навык');
+  }
+
+  function openMapStage(){
+    state.flowMapRevealed = true;
+    state.activeFlowStage = 'map';
+    if(state.simSelectedChoice != null) state.simMode = 'practice';
+    render();
+    scrollFlowStage('map');
+    showToast('Карта и рабочее поле открыты ниже');
+  }
+
+  function scrollFlowStage(id){
+    window.setTimeout(function(){
+      var selector = id === 'map' ? '.np-guide' : '[data-flow-block="' + id + '"]';
+      var target = document.querySelector(selector) || document.querySelector('.np-sim');
+      if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 20);
   }
 
   function setFlowStage(id){
     var stage = flowStageById(id);
+    if(stage.id === 'practice' && !isFlowStageUnlocked('practice')) {
+      startSimPractice();
+      return;
+    }
+    if(stage.id === 'map' && !state.flowMapRevealed && isFlowStageUnlocked('map')) {
+      openMapStage();
+      return;
+    }
     if(!isFlowStageUnlocked(stage.id)) {
       showToast(stage.id === 'map' ? 'Сначала сделайте первый ход' : 'Сначала выберите ответ');
       return;
@@ -897,8 +960,7 @@
     if(stage.id === 'learn') state.simMode = 'learn';
     if(stage.id === 'practice' || stage.id === 'debrief') state.simMode = 'practice';
     render();
-    var target = document.querySelector(stage.id === 'map' ? '.np-guide' : '.np-sim');
-    if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollFlowStage(stage.id);
   }
 
   function renderSim(){
@@ -951,29 +1013,60 @@
         '<div class="np-sim-meta"><span>Финал</span><span>' + esc(scene.title) + '</span><span>Фаза 11: Итог</span></div>' +
         '<div class="np-sim-dialog"><span class="np-sim-person">Разбор</span><p class="np-sim-line">' + esc(finalText.title) + '</p><p class="np-sim-hint">' + esc(finalText.body) + '</p></div>' +
         '<div class="np-sim-feedback"><strong>Следующая тренировка</strong><p>' + esc(finalText.next) + '</p></div>';
-    } else if(stage === 'learn') {
-      els.simCard.innerHTML =
-        '<div class="np-sim-meta"><span>Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>Режим объяснения</span></div>' +
-        '<div class="np-learning-card" data-testid="learning-mode">' +
-          '<div><span class="np-sim-person">Что держать в голове</span><h3>' + esc(model.name) + '</h3><p>' + esc(model.lens) + '</p></div>' +
-          '<div class="np-learning-grid">' +
-            '<div><strong>Наблюдать</strong><ul>' + model.observe.map(function(item){ return '<li>' + esc(item) + '</li>'; }).join('') + '</ul></div>' +
-            '<div><strong>Навык</strong><p>' + esc(model.skill) + '</p></div>' +
-            '<div><strong>Сейчас B скажет</strong><p>' + esc(turn.bLine) + '</p></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="np-sim-feedback"><strong>Как пользоваться</strong><p>Сначала проговорите, какой параметр вы видите. Потом переходите в тренажер и выберите ответ A.</p></div>';
     } else {
-      els.simCard.innerHTML =
-        '<div class="np-sim-meta"><span>Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + turn.station + ': ' + esc(stationById(turn.station).short) + '</span><span>Режим тренажера</span></div>' +
-        '<div class="np-course-lesson"><span>Мысленная задача</span><h3>' + esc(model.skill) + '</h3><p>' + esc(model.lens) + '</p></div>' +
-        '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(turn.bLine) + '</p><p class="np-sim-hint">' + esc(turn.hint) + '</p></div>' +
-        '<div class="np-sim-practice-label">Практика: выберите ответ A</div>' +
-        '<div class="np-sim-choices">' + turn.choices.map(function(choice, index){
-          return '<button class="np-sim-choice' + (Number(state.simSelectedChoice) === index ? ' is-selected' : '') + '" type="button" data-sim-choice="' + index + '">' +
-            '<strong>' + esc(choice.label) + '</strong><span>' + esc(choice.text) + '</span></button>';
-        }).join('') + '</div>' +
-        (selected ? '<div class="np-sim-feedback"><strong>' + esc(selected.note) + '</strong><p>' + esc(selected.lesson) + '</p></div>' : '');
+      var activeTurnIndex = Number(state.activeSimTurn);
+      var lessonHtml = [];
+      for(var lessonIndex = 0; lessonIndex <= activeTurnIndex; lessonIndex += 1) {
+        var lessonTurn = scene.turns[lessonIndex];
+        var lessonModel = thinkingModelForTurn(lessonTurn);
+        var isCurrentLesson = lessonIndex === activeTurnIndex;
+        var lessonChoiceIndex = isCurrentLesson ? state.simSelectedChoice : simChoiceIndex(scene, lessonIndex);
+        var lessonChoice = lessonChoiceIndex == null ? null : lessonTurn.choices[lessonChoiceIndex];
+        var lessonDepth = isCurrentLesson ? currentFlowDepth() : flowStageIndex('debrief');
+        var practiceVisible = lessonDepth >= flowStageIndex('practice') || lessonChoice != null;
+        var debriefVisible = lessonDepth >= flowStageIndex('debrief') && lessonChoice != null;
+        var status = lessonChoice ? 'Пройдено' : (isCurrentLesson ? 'Сейчас' : 'Открыто');
+
+        lessonHtml.push(
+          '<section class="np-lesson-block' + (isCurrentLesson ? ' is-current' : ' is-complete') + '" data-lesson-index="' + lessonIndex + '">' +
+            '<div class="np-sim-meta"><span>Урок ' + (lessonIndex + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + lessonTurn.station + ': ' + esc(stationById(lessonTurn.station).short) + '</span><span>' + status + '</span></div>' +
+            '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'learn' : 'done-learn-' + lessonIndex) + '" data-testid="learning-mode">' +
+              '<div class="np-flow-block-head"><span class="np-flow-badge">1. Объяснение</span><strong>' + esc(lessonModel.name) + '</strong></div>' +
+              '<div class="np-learning-card">' +
+                '<div><span class="np-sim-person">Что держать в голове</span><h3>' + esc(lessonModel.name) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
+                '<div class="np-learning-grid">' +
+                  '<div><strong>Наблюдать</strong><ul>' + lessonModel.observe.map(function(item){ return '<li>' + esc(item) + '</li>'; }).join('') + '</ul></div>' +
+                  '<div><strong>Навык</strong><p>' + esc(lessonModel.skill) + '</p></div>' +
+                  '<div><strong>Сейчас B скажет</strong><p>' + esc(lessonTurn.bLine) + '</p></div>' +
+                '</div>' +
+              '</div>' +
+              (isCurrentLesson && !practiceVisible ? '<div class="np-flow-block-actions"><button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-start-practice">Далее: к отработке</button></div>' : '') +
+            '</div>' +
+            (practiceVisible ? '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'practice' : 'done-practice-' + lessonIndex) + '" data-testid="practice-mode">' +
+              '<div class="np-flow-block-head"><span class="np-flow-badge">2. Тренажер</span><strong>' + esc(lessonModel.skill) + '</strong></div>' +
+              '<div class="np-course-lesson"><span>Мысленная задача</span><h3>' + esc(lessonModel.skill) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
+              '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(lessonTurn.bLine) + '</p><p class="np-sim-hint">' + esc(lessonTurn.hint) + '</p></div>' +
+              '<div class="np-sim-practice-label">Практика: выберите ответ A</div>' +
+              '<div class="np-sim-choices">' + lessonTurn.choices.map(function(choice, choiceIndex){
+                var canAnswer = isCurrentLesson && !state.simFinished;
+                return '<button class="np-sim-choice' + (Number(lessonChoiceIndex) === choiceIndex ? ' is-selected' : '') + '" type="button" ' + (canAnswer ? 'data-sim-choice="' + choiceIndex + '"' : 'disabled aria-disabled="true"') + '>' +
+                  '<strong>' + esc(choice.label) + '</strong><span>' + esc(choice.text) + '</span></button>';
+              }).join('') + '</div>' +
+            '</div>' : '') +
+            (debriefVisible ? '<div class="np-flow-block np-flow-block--debrief" data-flow-block="' + (isCurrentLesson ? 'debrief' : 'done-debrief-' + lessonIndex) + '" data-testid="debrief-mode">' +
+              '<div class="np-flow-block-head"><span class="np-flow-badge">3. Разбор</span><strong>Что произошло с переговорами</strong></div>' +
+              '<div class="np-sim-feedback"><strong>' + esc(lessonChoice.note) + '</strong><p>' + esc(lessonChoice.lesson) + '</p></div>' +
+              '<div class="np-result-grid">' +
+                '<div><span>Резонанс</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.resonance) || state.simScores.resonance) + '</strong></div>' +
+                '<div><span>Доверие</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.trust) || state.simScores.trust) + '</strong></div>' +
+                '<div><span>Напряжение</span><strong>' + esc((state.simHistory[lessonIndex] && state.simHistory[lessonIndex].scores && state.simHistory[lessonIndex].scores.tension) || state.simScores.tension) + '</strong></div>' +
+              '</div>' +
+              (isCurrentLesson ? '<div class="np-flow-block-actions"><button class="ys-button np-mini-button" type="button" data-action="flow-open-map">Открыть карту ниже</button><button class="ys-button ys-button--primary np-mini-button" type="button" data-action="sim-next">' + (lessonIndex >= scene.turns.length - 1 ? 'Завершить курс' : 'Далее: следующий урок') + '</button></div>' : '') +
+            '</div>' : '') +
+          '</section>'
+        );
+      }
+      els.simCard.innerHTML = '<div class="np-lesson-feed">' + lessonHtml.join('') + '</div>';
     }
 
     els.simTrack.innerHTML = scene.turns.map(function(item, index){
@@ -996,19 +1089,25 @@
   function renderFlow(){
     if(!els.flowSteps) return;
     var active = flowStageById(state.activeFlowStage);
+    var depth = currentFlowDepth();
     els.flowHint.textContent = active.hint;
     els.flowSteps.innerHTML = flowStages.map(function(stage, index){
-      var unlocked = isFlowStageUnlocked(stage.id);
+      var revealed = stage.id === 'map' ? !!state.flowMapRevealed : index <= depth;
+      var unlocked = isFlowStageUnlocked(stage.id) || (stage.id === 'practice' && depth < flowStageIndex('practice'));
       var selected = stage.id === active.id;
+      var stateText = selected ? 'Сейчас' : (revealed ? 'Открыт' : (unlocked ? 'Доступен' : 'Закрыт'));
       return '<button class="np-flow-step' + (selected ? ' is-current' : '') + (unlocked ? ' is-unlocked' : ' is-locked') + '" type="button" role="tab" data-flow-stage="' + stage.id + '" aria-selected="' + (selected ? 'true' : 'false') + '" ' + (unlocked ? '' : 'disabled aria-disabled="true"') + '>' +
         '<span class="np-flow-step-num">' + (index + 1) + '</span>' +
         '<span class="np-flow-step-copy"><strong>' + esc(stage.title) + '</strong><span>' + esc(stage.label) + '</span></span>' +
-        '<span class="np-flow-step-state">' + (selected ? 'Сейчас' : (unlocked ? 'Открыт' : 'Закрыт')) + '</span>' +
+        '<span class="np-flow-step-state">' + stateText + '</span>' +
       '</button>';
     }).join('');
     els.flowSections.forEach(function(section){
       var stages = (section.getAttribute('data-flow-section') || '').split(/\s+/);
-      var visible = stages.includes(active.id);
+      var visible = stages.some(function(stageId){
+        if(stageId === 'map') return !!state.flowMapRevealed;
+        return flowStageIndex(stageId) <= depth;
+      });
       section.classList.toggle('is-active-flow', visible);
       section.hidden = !visible;
     });
@@ -1236,6 +1335,8 @@
       state.activeSimScene = linkedScene.id;
       state.activeSimTurn = 0;
       state.activeFlowStage = 'learn';
+      state.flowDepth = 0;
+      state.flowMapRevealed = false;
       state.simMode = 'learn';
       state.simSelectedChoice = null;
       state.simFinished = false;
@@ -1417,6 +1518,7 @@
       if(name === 'sim-restart') restartSim();
       if(name === 'sim-start-practice') startSimPractice();
       if(name === 'sim-next') nextSimTurn();
+      if(name === 'flow-open-map') openMapStage();
       if(name === 'guide-prev') setGuideStep(Number(state.activeGuideStep) - 1, { scroll: true });
       if(name === 'guide-next') setGuideStep(Number(state.activeGuideStep) + 1, { scroll: true });
       if(name === 'guide-focus') focusGuideFields();

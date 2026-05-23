@@ -32,7 +32,8 @@ The implemented option is a thinking-first practice flow. It keeps the backend i
 
 The trainer at `docs/negotiations.html` has six working layers:
 
-- sequential trainer: first explain the mental model, then unlock practice, then debrief, then reveal the map/workbench;
+- progressive lesson feed: explanation opens first, practice appears below after "next", debrief appears after the answer, completed lessons stay above for scrolling back;
+- sequential trainer: the map/workbench stays hidden until the user reaches it through a completed move;
 - step-by-step guide: an eight-step preparation flow tied to the Yasna phases;
 - scenario setup: parties, subject, give/take, hidden layer, atmosphere, exit history;
 - 12-phase Yasna map: information field through final result, with recommended phase;
