@@ -196,25 +196,24 @@ test.describe('Тренажёр переговоров', () => {
 
     await page.goto('/negotiations.html');
     await page.waitForFunction(() => !!window.YasnaNegotiationsTrainer, { timeout: 10_000 });
+    await page.evaluate(() => window.YasnaNegotiationsTrainer.applyPreset('hiring'));
 
-    await expect(page.getByRole('heading', { name: /Тренажер переговоров Ясны/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Переговоры Ясны/ })).toBeVisible();
     await expect(page.getByTestId('sequence-flow')).toContainText(/Последовательная подача/);
-    await expect(page.getByTestId('simulator-mode')).toContainText(/Симулятор встречи/);
-    await expect(page.getByTestId('simulator-mode')).toContainText(/Обучение → тренировка/);
-    await expect(page.getByTestId('thinking-map')).toContainText(/Фокус мышления/);
+    await expect(page.getByTestId('sequence-flow')).toContainText(/Общий прогресс: 0\/6 - 0%/);
+    await expect(page.getByTestId('simulator-mode')).toContainText(/Урок 1\. Вход/);
+    await expect(page.getByTestId('simulator-mode')).toContainText(/Уровень: Core/);
     await expect(page.getByTestId('learning-mode')).toContainText(/Что держать в голове/);
-    await expect(page.getByTestId('learning-mode')).toContainText(/Урок 1\. Вход/);
     await expect(page.getByTestId('learning-mode')).toContainText(/Формула входа/);
     await expect(page.getByTestId('guide-mode')).toBeHidden();
-    await expect(page.locator('#np-course-progress-label')).toContainText(/Урок 1 из 6/);
+    await expect(page.locator('#np-flow-progress-label')).toContainText(/0\/6 - 0%/);
     await expect(page.locator('[data-sim-turn="2"]')).toBeDisabled();
-    await page.locator('[data-sim-scene="hiring"]').click();
-    await page.locator('#np-sim-practice').click();
+    await page.locator('[data-flow-block="learn"] [data-action="sim-start-practice"]').click();
     await page.locator('[data-sim-choice="0"]').click();
     await expect(page.getByTestId('simulator-mode')).toContainText(/Резонанс начинается/);
-    await expect(page.locator('#np-sim-next')).toBeEnabled();
-    await page.locator('#np-sim-next').click();
-    await expect(page.locator('#np-course-progress-label')).toContainText(/Урок 2 из 6/);
+    await expect(page.locator('[data-flow-block="debrief"] [data-action="sim-next"]')).toBeEnabled();
+    await page.locator('[data-flow-block="debrief"] [data-action="sim-next"]').click();
+    await expect(page.locator('#np-flow-progress-label')).toContainText(/1\/6 - 17%/);
     await expect(page.locator('[data-sim-turn="1"]')).toBeEnabled();
 
     const simSnapshot = await page.evaluate(() => ({
@@ -222,7 +221,9 @@ test.describe('Тренажёр переговоров', () => {
     }));
     expect(simSnapshot.state.simHistory.length).toBeGreaterThanOrEqual(1);
 
-    await page.locator('[data-flow-stage="map"]').click();
+    await page.locator('[data-flow-block="learn"] [data-action="sim-start-practice"]').click();
+    await page.locator('[data-sim-choice="0"]').click();
+    await page.locator('[data-flow-block="debrief"] [data-action="flow-open-map"]').click();
     await expect(page.getByTestId('guide-mode')).toBeVisible();
 
     const snapshot = await page.evaluate(() => ({
@@ -239,7 +240,7 @@ test.describe('Тренажёр переговоров', () => {
       isQuarantine: true,
       realtimeDisabled: true,
     });
-    expect(snapshot.state.preset).toBe('hiring');
+    expect(snapshot.state.activeSimScene).toBe('hiring');
     expect(snapshot.metrics.readiness).toBeGreaterThan(40);
     expect(snapshot.metrics.resonance).toBeGreaterThan(40);
     expect(snapshot.brief).toContain('Ясна переговоров - снимок');

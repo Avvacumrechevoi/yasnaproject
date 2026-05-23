@@ -1980,3 +1980,291 @@ html[data-yasna-theme='dark'] .np-compass-metric {
     display: none;
   }
 }
+
+/* Course-first reset: the negotiations trainer should read like a lesson,
+   with advanced workbench elements hidden until the learner reaches them. */
+.np-shell {
+  width: min(1160px, 100%);
+  padding: var(--ys-space-6) var(--ys-space-6) var(--ys-space-8);
+}
+
+.np-context {
+  display: block;
+  max-width: 860px;
+  padding: var(--ys-space-4) 0 var(--ys-space-4);
+}
+
+.np-context h1 {
+  font-size: 42px;
+  line-height: 1.05;
+}
+
+.np-lead {
+  max-width: 780px;
+  font-size: var(--ys-text-lg);
+}
+
+.np-context-facts,
+.np-flow-steps,
+.np-mode-tabs,
+.np-thinking-map,
+.np-course-progress,
+.np-sim-score,
+.np-sim-scenes,
+.np-sim-side,
+.np-sim-actions {
+  display: none !important;
+}
+
+.np-flow {
+  gap: var(--ys-space-4);
+  margin: var(--ys-space-4) 0 var(--ys-space-8);
+  padding: var(--ys-space-5);
+  border-radius: var(--ys-radius-md);
+  box-shadow: none;
+}
+
+.np-flow-head {
+  align-items: start;
+}
+
+.np-flow h2 {
+  font-size: var(--ys-text-lg);
+}
+
+.np-flow-head p:last-child {
+  max-width: 480px;
+  font-size: var(--ys-text-sm);
+}
+
+.np-flow-progress {
+  display: grid;
+  gap: var(--ys-space-3);
+}
+
+.np-flow-progress span {
+  color: var(--ys-color-text);
+  font-size: var(--ys-text-lg);
+  font-weight: 750;
+}
+
+.np-flow-progress-track {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--ys-color-surface-muted);
+}
+
+.np-flow-progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ys-color-success);
+  transition: width .25s ease;
+}
+
+.np-sim {
+  display: block;
+  margin-bottom: var(--ys-space-8);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.np-sim-main {
+  max-width: 920px;
+}
+
+.np-sim-head {
+  display: grid;
+  gap: var(--ys-space-4);
+  margin: 0 0 var(--ys-space-6);
+}
+
+.np-sim h2 {
+  max-width: 900px;
+  font-size: clamp(34px, 5vw, 66px);
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.np-sim-card {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.np-lesson-feed {
+  gap: var(--ys-space-8);
+}
+
+.np-lesson-block {
+  gap: var(--ys-space-6);
+  padding-bottom: var(--ys-space-7);
+  border-bottom: 0;
+}
+
+.np-lesson-block .np-sim-meta,
+.np-flow-block-head strong,
+.np-learning-card > div:first-child h3 {
+  display: none;
+}
+
+.np-flow-block {
+  gap: var(--ys-space-5);
+  padding-left: 0;
+  border-left: 0;
+}
+
+.np-flow-block-head {
+  gap: var(--ys-space-3);
+}
+
+.np-flow-block-head strong {
+  font-size: var(--ys-text-lg);
+}
+
+.np-mentor {
+  display: flex;
+  align-items: center;
+  gap: var(--ys-space-4);
+}
+
+.np-mentor-avatar {
+  width: 78px;
+  height: 78px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ys-color-accent-soft);
+  color: var(--ys-color-accent-hover);
+  font-family: var(--ys-font-display);
+  font-size: 30px;
+  font-weight: 850;
+}
+
+.np-mentor-avatar--b {
+  background: var(--ys-color-surface-muted);
+  color: var(--ys-color-text-muted);
+}
+
+.np-mentor strong,
+.np-mentor small {
+  display: block;
+}
+
+.np-mentor strong {
+  color: var(--ys-color-text);
+  font-family: var(--ys-font-display);
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.np-mentor small {
+  margin-top: 4px;
+  color: var(--ys-color-text-muted);
+  font-size: var(--ys-text-md);
+}
+
+.np-learning-card h3 {
+  margin-top: 0;
+  font-size: 34px;
+}
+
+.np-learning-card {
+  gap: var(--ys-space-5);
+}
+
+.np-learning-grid {
+  display: none;
+}
+
+.np-learning-card > div:first-child p,
+.np-course-lesson p,
+.np-sim-hint {
+  font-size: var(--ys-text-lg);
+}
+
+.np-method-card,
+.np-practice-check,
+.np-method-takeaway {
+  padding: var(--ys-space-5);
+  border-radius: var(--ys-radius-md);
+  box-shadow: none;
+}
+
+.np-method-card {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.np-method-grid div,
+.np-learning-grid div {
+  border: 0;
+  border-left: 4px solid var(--ys-color-accent);
+  border-radius: 0;
+  background: transparent;
+  padding: var(--ys-space-2) var(--ys-space-4);
+}
+
+.np-method-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.np-sim-dialog {
+  gap: var(--ys-space-3);
+  padding: 0;
+}
+
+.np-sim-line {
+  font-size: clamp(26px, 3vw, 38px);
+}
+
+.np-sim-choices {
+  gap: var(--ys-space-4);
+}
+
+.np-sim-choice {
+  min-height: 82px;
+  padding: var(--ys-space-5);
+  border-radius: var(--ys-radius-sm);
+}
+
+.np-result-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 760px) {
+  .np-shell {
+    padding: var(--ys-space-4);
+  }
+
+  .np-context h1 {
+    font-size: 32px;
+  }
+
+  .np-flow-head {
+    display: grid;
+  }
+
+  .np-flow-head p:last-child {
+    text-align: left;
+  }
+
+  .np-sim h2 {
+    font-size: 34px;
+  }
+
+  .np-method-grid,
+  .np-learning-grid,
+  .np-result-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -19,7 +19,7 @@
 <meta name="yasna:tg-bot" content=""/>
 <meta name="yasna:theme" content="light"/>
 <link rel="stylesheet" href="../design-system.css?v=2"/>
-<link rel="stylesheet" href="../negotiations.css?v=8"/>
+<link rel="stylesheet" href="../negotiations.css?v=9"/>
 </head>
 <body class="np-page">
 <header class="np-topbar">
@@ -39,15 +39,9 @@
 <main class="np-shell" id="negotiations-trainer">
   <section class="np-context" aria-labelledby="np-title">
     <div>
-      <p class="np-kicker">Тренажер мышления</p>
-      <h1 id="np-title">Тренажер переговоров Ясны</h1>
-      <p class="np-lead">Сначала учимся видеть поле переговоров: время, тень, надежды, дать/взять и 3-9. Потом отрабатываем навык на репликах B.</p>
-    </div>
-    <div class="np-context-facts" aria-label="Опоры методики">
-      <span>Две встречные Ясны</span>
-      <span>Резонанс / десонанс</span>
-      <span>Веревки веры</span>
-      <span>Археология итога</span>
+      <p class="np-kicker">Курс-тренажер</p>
+      <h1 id="np-title">Переговоры Ясны</h1>
+      <p class="np-lead">Идем как в уроке: объяснение, действие, разбор. Следующий блок появляется только после вашего шага.</p>
     </div>
   </section>
 
@@ -59,6 +53,12 @@
       </div>
       <p id="np-flow-hint">Каждый следующий блок открывается ниже, пройденное остается доступным для прокрутки.</p>
     </div>
+    <div class="np-flow-progress" aria-label="Общий прогресс курса">
+      <span id="np-flow-progress-label">Общий прогресс: 0/6 - 0%</span>
+      <div class="np-flow-progress-track">
+        <div class="np-flow-progress-fill" id="np-flow-progress-fill"></div>
+      </div>
+    </div>
     <div class="np-flow-steps" id="np-flow-steps" role="tablist" aria-label="Этапы тренажера"></div>
   </section>
 
@@ -66,8 +66,8 @@
     <div class="np-sim-main">
       <div class="np-sim-head">
         <div>
-          <p class="np-section-kicker">Обучение → тренировка</p>
-          <h2 id="np-sim-title">Симулятор встречи</h2>
+          <p class="np-section-kicker" id="np-sim-kicker">Уровень: Core</p>
+          <h2 id="np-sim-title">Урок 1. Вход: хочу / не хочу</h2>
         </div>
         <div class="np-sim-scenes" id="np-sim-scenes" role="group" aria-label="Сценарии симулятора"></div>
       </div>
@@ -311,6 +311,6 @@
 </script>
 <script src="../core/env.js?v=1"></script>
 <script src="../core/theme.js?v=1"></script>
-<script src="../negotiations.js?v=8"></script>
+<script src="../negotiations.js?v=9"></script>
 </body>
 </html>

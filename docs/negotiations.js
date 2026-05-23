@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  var STORAGE_KEY = 'yasna_negotiations_trainer_v2';
+  var STORAGE_KEY = 'yasna_negotiations_trainer_v3';
   var DRILL_KEY = 'yasna_negotiations_drill_v1';
 
   var stations = [
@@ -1005,6 +1005,8 @@
       ? 'Курс завершен: ' + scene.turns.length + ' из ' + scene.turns.length
       : 'Урок ' + (Number(state.activeSimTurn) + 1) + ' из ' + scene.turns.length + ' · завершено ' + completed;
     els.courseProgressFill.style.width = progressPercent + '%';
+    if(els.simTitle) els.simTitle.textContent = state.simFinished ? 'Курс завершен' : 'Урок ' + (Number(state.activeSimTurn) + 1) + '. ' + turn.title;
+    if(els.simKicker) els.simKicker.textContent = state.simFinished ? 'Финальный разбор' : 'Уровень: Core';
     els.simResonance.textContent = String(round(state.simScores.resonance));
     els.simTrust.textContent = String(round(state.simScores.trust));
     els.simTension.textContent = String(round(state.simScores.tension));
@@ -1042,6 +1044,7 @@
             '<div class="np-sim-meta"><span>Урок ' + (lessonIndex + 1) + ' из ' + scene.turns.length + '</span><span>Фаза ' + lessonTurn.station + ': ' + esc(stationById(lessonTurn.station).short) + '</span><span>' + status + '</span></div>' +
             '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'learn' : 'done-learn-' + lessonIndex) + '" data-testid="learning-mode">' +
               '<div class="np-flow-block-head"><span class="np-flow-badge">1. Объяснение</span><strong>' + esc(lessonModel.name) + '</strong></div>' +
+              '<div class="np-mentor"><span class="np-mentor-avatar">Я</span><span><strong>Ясна</strong><small>методолог переговоров</small></span></div>' +
               '<div class="np-learning-card">' +
                 '<div><span class="np-sim-person">Что держать в голове</span><h3>' + esc(lessonModel.name) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
                 renderMethodCard(lessonModel) +
@@ -1055,6 +1058,7 @@
             '</div>' +
             (practiceVisible ? '<div class="np-flow-block" data-flow-block="' + (isCurrentLesson ? 'practice' : 'done-practice-' + lessonIndex) + '" data-testid="practice-mode">' +
               '<div class="np-flow-block-head"><span class="np-flow-badge">2. Тренажер</span><strong>' + esc(lessonModel.skill) + '</strong></div>' +
+              '<div class="np-mentor"><span class="np-mentor-avatar np-mentor-avatar--b">B</span><span><strong>Собеседник</strong><small>сейчас проверяет вход</small></span></div>' +
               '<div class="np-course-lesson"><span>Мысленная задача</span><h3>' + esc(lessonModel.skill) + '</h3><p>' + esc(lessonModel.lens) + '</p></div>' +
               renderPracticeCheck(lessonModel) +
               '<div class="np-sim-dialog"><span class="np-sim-person">B говорит</span><p class="np-sim-line">' + esc(lessonTurn.bLine) + '</p><p class="np-sim-hint">' + esc(lessonTurn.hint) + '</p></div>' +
@@ -1103,6 +1107,13 @@
     if(!els.flowSteps) return;
     var active = flowStageById(state.activeFlowStage);
     var depth = currentFlowDepth();
+    var scene = currentSimScene();
+    var completed = completedSimTurns(scene);
+    var progressPercent = state.simFinished ? 100 : Math.round(completed / scene.turns.length * 100);
+    if(els.flowProgressLabel) {
+      els.flowProgressLabel.textContent = 'Общий прогресс: ' + (state.simFinished ? scene.turns.length : completed) + '/' + scene.turns.length + ' - ' + progressPercent + '%';
+    }
+    if(els.flowProgressFill) els.flowProgressFill.style.width = progressPercent + '%';
     els.flowHint.textContent = active.hint;
     els.flowSteps.innerHTML = flowStages.map(function(stage, index){
       var revealed = stage.id === 'map' ? !!state.flowMapRevealed : index <= depth;
@@ -1575,6 +1586,8 @@
   function init(){
     els.flowSteps = document.getElementById('np-flow-steps');
     els.flowHint = document.getElementById('np-flow-hint');
+    els.flowProgressLabel = document.getElementById('np-flow-progress-label');
+    els.flowProgressFill = document.getElementById('np-flow-progress-fill');
     els.flowSections = document.querySelectorAll('[data-flow-section]');
     els.presets = document.getElementById('np-presets');
     els.form = document.getElementById('np-form');
@@ -1589,6 +1602,8 @@
     els.resonance = document.getElementById('np-resonance');
     els.desonance = document.getElementById('np-desonance');
     els.simScenes = document.getElementById('np-sim-scenes');
+    els.simTitle = document.getElementById('np-sim-title');
+    els.simKicker = document.getElementById('np-sim-kicker');
     els.simMode = document.getElementById('np-sim-mode');
     els.thinkingMap = document.getElementById('np-thinking-map');
     els.simCard = document.getElementById('np-sim-card');
